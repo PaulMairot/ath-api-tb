@@ -26,7 +26,9 @@ const positionSchema = new Schema({
         max: 100.0
     },
     time: {
-        type: Date
+        type: Number,
+        min: 1000000,
+        max: 9999999,
     },
     coordinates: [{
         type: Number,

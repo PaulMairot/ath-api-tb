@@ -11,7 +11,9 @@ const performanceSchema = new Schema({
         ref: 'Race'
     },
     result: {
-        type: String
+        type: Number,
+        min: 1000000,
+        max: 9999999,
     },
     position: [{ 
         type : mongoose.Schema.Types.ObjectId, 
