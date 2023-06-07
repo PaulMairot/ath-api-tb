@@ -9,8 +9,10 @@
   },
   "dependencies": {
     "debug": "~4.3.4",
+    "dotenv": "^16.1.4",
     "express": "~4.18.1",
     "http-errors": "^2.0.0",
+    "mongoose": "^7.2.2",
     "morgan": "~1.10.0"
   }
 }
