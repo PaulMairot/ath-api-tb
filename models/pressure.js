@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 const pressureSchema = new Schema({
     time: [{ 
-        type : String
+        type : Number,
+        min: -1000,
+        max: 1000
     }],
     pressure: [{ 
         type : Number,

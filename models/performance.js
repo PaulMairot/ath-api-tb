@@ -11,9 +11,7 @@ const performanceSchema = new Schema({
         ref: 'Race'
     },
     result: {
-        type: Number,
-        min: 1000000,
-        max: 9999999,
+        type: Date
     },
     position: [{ 
         type : mongoose.Schema.Types.ObjectId, 
@@ -34,7 +32,7 @@ const performanceSchema = new Schema({
         enum: { values: ['SB', 'PB', 'NB', 'WB', 'MB', 'WR', 'OR', 'MR', 'NR', 'DNS', 'DNF', 'DQ'], 
                 message: "{VALUE} is not supported, try a value from this list : [SB, PB, NB, WB, MB, WR, OR, MR, NR, DNS, DNF, DQ]"}
     }
-});
+}, { toJSON: { getters: true } }); 
 
 // Create the model from the schema and export it
 export default mongoose.model('Performance', performanceSchema);

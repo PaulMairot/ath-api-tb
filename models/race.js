@@ -7,8 +7,11 @@ const raceSchema = new Schema({
         ref: 'Meeting',
         required: true
     },
-    startTime: {
+    plannedStartTime: {
         type: Date,
+    },
+    realStartTime: {
+        type: Date
     },
     state: {
         type: String,
