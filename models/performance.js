@@ -10,6 +10,12 @@ const performanceSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Race'
     },
+    lane: {
+        type: Number,
+        required: true,
+        min: 1,
+        max: 10
+    },
     result: {
         type: Date
     },

@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
+    
     if(filters.alpha2) { filters.alpha2 = filters.alpha2.toUpperCase() };
     if(filters.alpha3) { filters.alpha3 = filters.alpha3.toUpperCase() };
     if(filters.name) { filters.name = filters.name.charAt(0).toUpperCase() + filters.name.slice(1).toLowerCase(); };

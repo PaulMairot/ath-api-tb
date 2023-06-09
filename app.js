@@ -8,6 +8,8 @@ import usersRouter from "./routes/users.js";
 import disciplineRouter from "./routes/discipline.js";
 import weatherRouter from "./routes/weather.js";
 import countryRouter from "./routes/country.js";
+import athleteRouter from "./routes/athlete.js";
+import meetingRouter from "./routes/meeting.js";
 
 import * as config from "./config.js";
 
@@ -27,6 +29,8 @@ app.use("/users", usersRouter);
 app.use("/discipline", disciplineRouter);
 app.use("/weather", weatherRouter);
 app.use("/country", countryRouter);
+app.use("/athlete", athleteRouter);
+app.use("/meeting", meetingRouter);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -28,7 +28,7 @@ const raceSchema = new Schema({
         type: String,
         required: true,
         lowercase: true,
-        enum: ['women', 'men', 'girls', 'boys']
+        enum: ['women', 'men', 'girls', 'boys', 'mixed']
     },
     weather: {
         type: mongoose.Schema.Types.ObjectId,
