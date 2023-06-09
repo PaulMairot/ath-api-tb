@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { transformJson } from '../spec/utils.js';
+
 const Schema = mongoose.Schema;
 
 const weatherSchema = new Schema({
@@ -15,6 +17,10 @@ const weatherSchema = new Schema({
         enum: { values: ['sunny', 'cloudy', 'partly cloudy', 'clear skies', 'overcast', 'rainy', 'showers', 'drizzle', 'thunderstorms', 'lightning', 'hail', 'snowy', 'foggy', 'misty', 'smoggy', 'windy'], 
                 message: "{VALUE} is not supported, try a value from this list : [sunny, cloudy, partly cloudy, clear skies, overcast, rainy, showers, drizzle, thunderstorms, lightning, hail, snowy, foggy, misty, smoggy, windy]"}
     }
+});
+
+weatherSchema.set("toJSON", {
+    transform: transformJson
 });
 
 // Create the model from the schema and export it

@@ -1,8 +1,13 @@
 import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
+
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
+
+import disciplineRouter from "./routes/discipline.js";
+import weatherRouter from "./routes/weather.js";
+import countryRouter from "./routes/country.js";
 
 import * as config from "./config.js";
 
@@ -19,12 +24,16 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-// catch 404 and forward to error handler
+app.use("/discipline", disciplineRouter);
+app.use("/weather", weatherRouter);
+app.use("/country", countryRouter);
+
+// Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
-// error handler
+// Error handler
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
