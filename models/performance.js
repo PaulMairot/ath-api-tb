@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { transformJson } from '../spec/utils.js';
+
 const Schema = mongoose.Schema;
 
 const performanceSchema = new Schema({
@@ -38,7 +40,11 @@ const performanceSchema = new Schema({
         enum: { values: ['SB', 'PB', 'NB', 'WB', 'MB', 'WR', 'OR', 'MR', 'NR', 'DNS', 'DNF', 'DQ'], 
                 message: "{VALUE} is not supported, try a value from this list : [SB, PB, NB, WB, MB, WR, OR, MR, NR, DNS, DNF, DQ]"}
     }
-}, { toJSON: { getters: true } }); 
+});
+
+performanceSchema.set("toJSON", {
+    transform: transformJson
+});
 
 // Create the model from the schema and export it
 export default mongoose.model('Performance', performanceSchema);

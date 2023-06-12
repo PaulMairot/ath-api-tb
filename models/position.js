@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { transformJson } from '../spec/utils.js';
+
 const Schema = mongoose.Schema;
 
 const positionSchema = new Schema({
@@ -18,7 +20,7 @@ const positionSchema = new Schema({
     gapToLeader: {
         type: Number,
         min: 0.0,
-        max: 10000.0
+        max: 1000.0
     },
     speed: {
         type: Number,
@@ -32,6 +34,10 @@ const positionSchema = new Schema({
         type: Number,
         min: 0
     }]
+});
+
+positionSchema.set("toJSON", {
+    transform: transformJson
 });
 
 // Create the model from the schema and export it

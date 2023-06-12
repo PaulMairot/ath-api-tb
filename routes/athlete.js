@@ -18,7 +18,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:id", function (req, res, next) {
-    Athlete.findById(req.params.id).then((athlete) => {
+    Athlete.findById(req.params.id).populate('nationality').populate('discipline').then((athlete) => {
         res.send(athlete);
     }).catch((err) => {
         res.status(404).send("Athlete with ID " + req.params.id + " not found.");

@@ -25,7 +25,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:id", function (req, res, next) {
-    Meeting.findById(req.params.id).then((meeting) => {
+    Meeting.findById(req.params.id).populate('country').then((meeting) => {
         res.send(meeting);
     }).catch((err) => {
         res.status(404).send("Meeting with ID " + req.params.id + " not found.");

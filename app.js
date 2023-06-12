@@ -10,6 +10,10 @@ import weatherRouter from "./routes/weather.js";
 import countryRouter from "./routes/country.js";
 import athleteRouter from "./routes/athlete.js";
 import meetingRouter from "./routes/meeting.js";
+import raceRouter from "./routes/race.js";
+import pressureRouter from "./routes/pressure.js";
+import positionRouter from "./routes/position.js";
+import performanceRouter from "./routes/performance.js";
 
 import * as config from "./config.js";
 
@@ -31,6 +35,10 @@ app.use("/weather", weatherRouter);
 app.use("/country", countryRouter);
 app.use("/athlete", athleteRouter);
 app.use("/meeting", meetingRouter);
+app.use("/race", raceRouter);
+app.use("/pressure", pressureRouter);
+app.use("/position", positionRouter);
+app.use("/performance", performanceRouter);
 
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {

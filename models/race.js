@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import { transformJson } from '../spec/utils.js';
+
 const Schema = mongoose.Schema;
 
 const raceSchema = new Schema({
@@ -38,6 +40,14 @@ const raceSchema = new Schema({
         type : mongoose.Schema.Types.ObjectId, 
         ref: 'Athlete' 
     }],
+    performances: [{ 
+        type : mongoose.Schema.Types.ObjectId, 
+        ref: 'Performance'
+    }]
+});
+
+raceSchema.set("toJSON", {
+    transform: transformJson
 });
 
 // Create the model from the schema and export it
