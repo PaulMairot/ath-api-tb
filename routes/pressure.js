@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
 
-    Pressure.find({...filters}).populate('athlete').populate('race').then((pressures) => {
+    Pressure.find({...filters}).populate(['athlete', 'race']).then((pressures) => {
             res.send(pressures);
         }).catch((err) => {
             return next(err);

@@ -7,6 +7,8 @@ router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.limit;
 
+    console.log(filters);
+
     if(filters.name) { 
         filters.name = filters.name.split(" ").map((word) => { 
                             return word[0].toUpperCase() + word.substring(1); 

@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { format, getHours, getMinutes } from 'date-fns'
 import { transformJson } from '../spec/utils.js';
 
 const Schema = mongoose.Schema;
@@ -6,11 +7,13 @@ const Schema = mongoose.Schema;
 const performanceSchema = new Schema({
     athlete: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Athlete'
+        ref: 'Athlete',
+        required: true
     },
     race: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Race'
+        ref: 'Race',
+        required: true
     },
     lane: {
         type: Number,
@@ -19,7 +22,8 @@ const performanceSchema = new Schema({
         max: 10
     },
     result: {
-        type: Date
+        type: Date,
+        get: formatResult
     },
     position: [{ 
         type : mongoose.Schema.Types.ObjectId, 
@@ -34,16 +38,32 @@ const performanceSchema = new Schema({
         min: -10.0,
         max: 10.0
     },
-    mention: {
+    mention: [{
         type: String,
-        required: true,
         enum: { values: ['SB', 'PB', 'NB', 'WB', 'MB', 'WR', 'OR', 'MR', 'NR', 'DNS', 'DNF', 'DQ'], 
                 message: "{VALUE} is not supported, try a value from this list : [SB, PB, NB, WB, MB, WR, OR, MR, NR, DNS, DNF, DQ]"}
-    }
+    }]
 });
 
+function formatResult(result) {
+    // Remove timezone offset
+    let time = new Date(result.valueOf() + result.getTimezoneOffset() * 60 * 1000);
+
+    // Adjust time format tokens
+    let formatTokens = "HH:mm:ss.SSS";
+    if (getHours(time) == 0) {
+        formatTokens = "mm:ss.SSS";
+    } 
+    if (getHours(time) == 0 && getMinutes(time) == 0) {
+        formatTokens = "ss.SSS";
+    }
+
+    return format(time, formatTokens);
+}
+
 performanceSchema.set("toJSON", {
-    transform: transformJson
+    transform: transformJson,
+    getters: true
 });
 
 // Create the model from the schema and export it

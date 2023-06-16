@@ -1,23 +1,24 @@
 import express from "express";
 import Position from "../models/position.js";
-import position from "../models/position.js";
 
 const router = express.Router();
 
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
-
     delete filters.speed;
-    if (filters.time) { filters.time = new Date(filters.time).toISOString()}
+    delete filters.time;
 
     Position.find({
+        ...req.query.time ? { time: { $gt: req.query.time } } : {},
         ...filters,
-        ...req.query.speed ? { speed: { $gt: req.query.speed } } : {},
-    }).sort({time: 1}).then((positions) => {
-        res.send(positions);
-    }).catch((err) => {
-        return next(err);
-    });
+        ...req.query.speed ? { speed: { $gt: req.query.speed } } : {}
+    })
+        .populate(['athlete', 'race'])
+        .sort({time: 1}).then((positions) => {
+            res.send(positions);
+        }).catch((err) => {
+            return next(err);
+        });
 });
 
 router.post("/", function (req, res, next) {
@@ -36,7 +37,6 @@ router.put("/:id", function (req, res, next) {
     }).catch((err) => {
         res.status(409).send(err)
     })
-
 });
 
 router.delete("/:id", function (req, res, next) {
