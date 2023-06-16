@@ -1,5 +1,6 @@
 import express from "express";
 import Race from "../models/race.js";
+import Meeting from "../models/meeting.js";
 
 const router = express.Router();
 
@@ -37,13 +38,17 @@ router.get("/:id", function (req, res, next) {
 
 router.post("/", function (req, res, next) {
     const newRace = new Race(req.body);
+    
+    newRace.save().then(async (savedRace) => {
+        // Add race to meeting races array
+        await Meeting.findOneAndUpdate(
+            { _id: req.body.meeting }, { $push: { races: savedRace._id }}
+        )
 
-    newRace.save().then((savedRace) => {
         res.status(201).send(savedRace);
     }).catch((err) => {
         res.status(409).send(err);
     });
-
 });
 
 router.put("/:id", function (req, res, next) {

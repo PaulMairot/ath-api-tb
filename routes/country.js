@@ -10,7 +10,6 @@ router.get("/", function (req, res, next) {
     if(filters.alpha3) { filters.alpha3 = filters.alpha3.toUpperCase() };
     if(filters.name) { filters.name = filters.name.charAt(0).toUpperCase() + filters.name.slice(1).toLowerCase(); };
 
-    console.log(filters);
     Country.find({...filters}).sort({name: 1}).then((countries) => {
         res.send(countries);
     }).catch((err) => {

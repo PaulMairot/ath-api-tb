@@ -7,8 +7,6 @@ router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.limit;
 
-    console.log(filters);
-
     if(filters.name) { 
         filters.name = filters.name.split(" ").map((word) => { 
                             return word[0].toUpperCase() + word.substring(1); 
@@ -18,7 +16,7 @@ router.get("/", function (req, res, next) {
     if(filters.city) { filters.city = filters.city.charAt(0).toUpperCase() + filters.city.slice(1).toLowerCase(); };
 
     Meeting.find({...filters})
-        .populate('country')
+        .populate(['country', 'races'])
         .sort({name: 1}).limit(req.query.limit).then((meetings) => {
             res.send(meetings);
         }).catch((err) => {
@@ -27,7 +25,7 @@ router.get("/", function (req, res, next) {
 });
 
 router.get("/:id", function (req, res, next) {
-    Meeting.findById(req.params.id).populate('country').then((meeting) => {
+    Meeting.findById(req.params.id).populate(['country', 'races']).then((meeting) => {
         res.send(meeting);
     }).catch((err) => {
         res.status(404).send("Meeting with ID " + req.params.id + " not found.");

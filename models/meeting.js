@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { transformJson } from '../spec/utils.js';
+import { transformJson, formatDate } from '../spec/utils.js';
 
 const Schema = mongoose.Schema;
 
@@ -11,11 +11,13 @@ const meetingSchema = new Schema({
     },
     startDate: {
         type: Date,
-        require: true
+        require: true,
+        get: formatDate
     },
     endDate: {
         type: Date,
-        require: true
+        require: true,
+        get: formatDate
     },
     location: {
         type: String,
@@ -51,8 +53,10 @@ meetingSchema.pre('save', function (next) {
     next();
 });
 
+
 meetingSchema.set("toJSON", {
-    transform: transformJson
+    transform: transformJson,
+    getters: true
 });
 
 // Create the model from the schema and export it

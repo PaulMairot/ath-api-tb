@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { transformJson } from '../spec/utils.js';
+import { transformJson, formatDate } from '../spec/utils.js';
 
 const Schema = mongoose.Schema;
 
@@ -17,7 +17,8 @@ const athleteSchema = new Schema({
         maxlength: 50
     },
     dateOfBirth: {
-        type: Date
+        type: Date,
+        get: formatDate
     },
     gender: {
         type: String,
@@ -43,7 +44,8 @@ athleteSchema.pre('save', function (next) {
 });
 
 athleteSchema.set("toJSON", {
-    transform: transformJson
+    transform: transformJson,
+    getters: true
 });
 
 // Create the model from the schema and export it
