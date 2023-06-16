@@ -40,6 +40,9 @@ app.use("/pressure", pressureRouter);
 app.use("/position", positionRouter);
 app.use("/performance", performanceRouter);
 
+// Serve the apiDoc documentation.
+app.use('/apidoc', express.static('docs'));
+
 // Catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

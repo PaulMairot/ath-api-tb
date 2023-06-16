@@ -15,7 +15,11 @@ router.get("/", function (req, res, next) {
     })
         .populate(['athlete', 'race'])
         .sort({time: 1}).then((positions) => {
-            res.send(positions);
+            if (positions.length === 0) {
+                res.status(404).send("No position found.")
+            } else {
+                res.send(positions);
+            }
         }).catch((err) => {
             return next(err);
         });
@@ -32,7 +36,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.put("/:id", function (req, res, next) {
-    Position.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false }).then((updatedPosition) => {
+    Position.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedPosition) => {
         res.send(updatedPosition);
     }).catch((err) => {
         res.status(409).send(err)

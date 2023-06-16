@@ -18,7 +18,11 @@ router.get("/", function (req, res, next) {
     Meeting.find({...filters})
         .populate(['country', 'races'])
         .sort({name: 1}).limit(req.query.limit).then((meetings) => {
-            res.send(meetings);
+            if (meetings.length === 0) {
+                res.status(404).send("No meeting found.")
+            } else {
+                res.send(meetings);
+            }
         }).catch((err) => {
             return next(err);
         });
@@ -26,9 +30,13 @@ router.get("/", function (req, res, next) {
 
 router.get("/:id", function (req, res, next) {
     Meeting.findById(req.params.id).populate(['country', 'races']).then((meeting) => {
-        res.send(meeting);
+        if (meeting == null) {
+            res.status(404).send("No meeting found with ID :" + req.params.id + ".")
+        } else {
+            res.send(meeting);
+        }
     }).catch((err) => {
-        res.status(404).send("Meeting with ID " + req.params.id + " not found.");
+        return next(err);
     });
 });
 
@@ -44,7 +52,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.put("/:id", function (req, res, next) {
-    Meeting.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false }).then((updatedMeeting) => {
+    Meeting.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedMeeting) => {
         res.send(updatedMeeting);
     }).catch((err) => {
         res.status(409).send(err)

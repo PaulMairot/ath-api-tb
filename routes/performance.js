@@ -17,7 +17,6 @@ router.get("/", function (req, res, next) {
     delete filters.reactionTime;
     delete filters.result;
 
-
     Performance.find({
         ...req.query.result ? { result: { $gte: new Date(req.query.result).toISOString() } } : {},
         ...req.query.reactionTime ? { reactionTime: { $gte: req.query.reactionTime } } : {},
@@ -25,7 +24,11 @@ router.get("/", function (req, res, next) {
     })
         .populate(['athlete', 'race', 'position', 'startingPressure'])
         .sort({lane: 1}).then((performances) => {
-            res.send(performances);
+            if (performances.length === 0) {
+                res.status(404).send("No performance found.")
+            } else {
+                res.send(performances);
+            }
         }).catch((err) => {
             return next(err);
         });
@@ -33,9 +36,13 @@ router.get("/", function (req, res, next) {
 
 router.get("/:id", function (req, res, next) {
     Performance.findById(req.params.id).populate('country').then((performance) => {
-        res.send(performance);
+        if (performance == null) {
+            res.status(404).send("No performance found with ID :" + req.params.id + ".")
+        } else {
+            res.send(performance);
+        }
     }).catch((err) => {
-        res.status(404).send("Performance with ID " + req.params.id + " not found.");
+        return next(err);
     });
 });
 
@@ -88,7 +95,7 @@ router.post("/", async function (req, res, next) {
 });
 
 router.put("/:id", function (req, res, next) {
-    Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false }).then((updatedPerformance) => {
+    Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedPerformance) => {
         res.send(updatedPerformance);
     }).catch((err) => {
         res.status(409).send(err)

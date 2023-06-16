@@ -11,7 +11,11 @@ router.get("/", function (req, res, next) {
     if(filters.gender) { filters.gender = filters.gender.toUpperCase() };
 
     Athlete.find({...filters}).sort({lastName: 1}).populate('nationality').populate('discipline').then((athletes) => {
-        res.send(athletes);
+        if (athletes.length === 0) {
+            res.status(404).send("No athlete found.")
+        } else {
+            res.send(athletes);
+        }
     }).catch((err) => {
         return next(err);
     });
@@ -19,9 +23,13 @@ router.get("/", function (req, res, next) {
 
 router.get("/:id", function (req, res, next) {
     Athlete.findById(req.params.id).populate('nationality').populate('discipline').then((athlete) => {
-        res.send(athlete);
+        if (athlete == null) {
+            res.status(404).send("No athlete found with ID :" + req.params.id + ".")
+        } else {
+            res.send(athlete);
+        }
     }).catch((err) => {
-        res.status(404).send("Athlete with ID " + req.params.id + " not found.");
+        return next(err);
     });
 });
 
@@ -37,7 +45,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.put("/:id", function (req, res, next) {
-    Athlete.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false }).then((updatedAthlete) => {
+    Athlete.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedAthlete) => {
         res.send(updatedAthlete);
     }).catch((err) => {
         res.status(409).send(err)

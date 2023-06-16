@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node ./bin/start",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "apidoc": "apidoc -i routes -o docs"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
@@ -15,5 +16,8 @@
     "http-errors": "^2.0.0",
     "mongoose": "^7.2.2",
     "morgan": "~1.10.0"
+  },
+  "devDependencies": {
+    "apidoc": "^1.0.3"
   }
 }

@@ -12,12 +12,13 @@ router.get("/", function (req, res, next) {
     if(filters.state) { filters.state = filters.state.toLowerCase() };
 
     Race.find({...filters})
-        .populate('meeting')
-        .populate('discipline')
-        .populate('weather')
-        .populate('athletes')
+        .populate(['meeting', 'discipline', 'weather', 'athletes'])
         .sort({name: 1}).limit(req.query.limit).then((races) => {
-            res.send(races);
+            if (races.length === 0) {
+                res.status(404).send("No race found.")
+            } else {
+                res.send(races);
+            }
         }).catch((err) => {
             return next(err);
         });
@@ -25,14 +26,15 @@ router.get("/", function (req, res, next) {
 
 router.get("/:id", function (req, res, next) {
     Race.findById(req.params.id)
-        .populate('meeting')
-        .populate('discipline')
-        .populate('weather')
-        .populate('athletes')
+        .populate(['meeting', 'discipline', 'weather', 'athletes'])
         .then((race) => {
-            res.send(race);
+            if (race == null) {
+                res.status(404).send("No race found with ID :" + req.params.id + ".")
+            } else {
+                res.send(race);
+            }
         }).catch((err) => {
-            res.status(404).send("Race with ID " + req.params.id + " not found.");
+            return next(err);
         });
 });
 
@@ -52,7 +54,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.put("/:id", function (req, res, next) {
-    Race.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false }).then((updatedRace) => {
+    Race.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedRace) => {
         res.send(updatedRace);
     }).catch((err) => {
         res.status(409).send(err)

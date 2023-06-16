@@ -8,7 +8,11 @@ router.get("/", function (req, res, next) {
     delete filters.limit;
 
     Discipline.find({...filters}).limit(req.query.limit).then((disciplines) => {
-        res.send(disciplines);
+        if (disciplines.length === 0) {
+            res.status(404).send("No discipline found.")
+        } else {
+            res.send(disciplines);
+        }
     }).catch((err) => {
         return next(err);
     });
@@ -16,9 +20,13 @@ router.get("/", function (req, res, next) {
 
 router.get("/:id", function (req, res, next) {
     Discipline.findById(req.params.id).then((discipline) => {
-        res.send(discipline);
+        if (discipline == null) {
+            res.status(404).send("No discipline found with ID :" + req.params.id + ".")
+        } else {
+            res.send(discipline);
+        }
     }).catch((err) => {
-        res.status(404).send("Discipline with ID " + req.params.id + " not found.");
+        return next(err);
     });
 });
 
@@ -34,7 +42,7 @@ router.post("/", function (req, res, next) {
 });
 
 router.put("/:id", function (req, res, next) {
-    Discipline.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false }).then((updatedDiscipline) => {
+    Discipline.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedDiscipline) => {
         res.send(updatedDiscipline);
     }).catch((err) => {
         res.status(409).send(err)
