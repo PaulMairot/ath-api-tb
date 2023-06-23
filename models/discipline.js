@@ -14,7 +14,12 @@ const disciplineSchema = new Schema({
         required: true,
         min: 100,
         max: 10000
-    }
+    },
+    gender: {
+        type: String,
+        lowercase: true,
+        enum: ['women', 'men', 'girls', 'boys']
+    },
 });
 
 disciplineSchema.set("toJSON", {

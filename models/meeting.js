@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const meetingSchema = new Schema({
     name: {
         type: String,
+        require: true,
         minlength: 2,
         maxlength: 100
     },
@@ -33,7 +34,8 @@ const meetingSchema = new Schema({
     },
     country: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Country'
+        ref: 'Country',
+        require: true
     },
     races: [{ 
         type : mongoose.Schema.Types.ObjectId, 

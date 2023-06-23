@@ -4,13 +4,14 @@ import Country from "../models/country.js";
 const router = express.Router();
 
 /**
- * @api {get} /country Request a list of country
+ * @api {get} /countries Request a list of country
  * @apiName GetCountries
  * @apiGroup Country
  * 
  * @apiParam {String} [name]        Name of a Country.
  * @apiParam {String} [alpha2]      Alpha 2 code of a country.
  * @apiParam {String} [alpha3]      Alpha 3 code of a country.
+ * @apiParam {String} [noc]         NOC of a country.
  * 
  * @apiParamExample {json} Request-Example:
  *     {
@@ -27,12 +28,14 @@ const router = express.Router();
  *      {
  *           "alpha2": "SE",
  *           "alpha3": "SWE",
+ *           "noc": "SWE",
  *           "name": "Sweden",
  *           "id": "4c82fd2c70264f8dfc92ff4f"
  *       },
  *       {
  *           "alpha2": "CH",
  *           "alpha3": "CHE",
+ *           "noc": "SUI",
  *           "name": "Switzerland",
  *           "id": "64e2fdc570e6702dfc9cfed0"
  *       }
@@ -45,7 +48,8 @@ router.get("/", function (req, res, next) {
     
     if(filters.alpha2) { filters.alpha2 = filters.alpha2.toUpperCase() };
     if(filters.alpha3) { filters.alpha3 = filters.alpha3.toUpperCase() };
-    if(filters.name) { filters.name = filters.name.charAt(0).toUpperCase() + filters.name.slice(1).toLowerCase(); };
+    if(filters.noc)    { filters.noc = filters.noc.toUpperCase() };
+    if(filters.name)   { filters.name = filters.name.charAt(0).toUpperCase() + filters.name.slice(1).toLowerCase(); };
 
     Country.find({...filters}).sort({name: 1}).then((countries) => {
         if (countries.length === 0) {
@@ -59,7 +63,7 @@ router.get("/", function (req, res, next) {
 });
 
 /**
- * @api {get} /country/:id Request a specific country
+ * @api {get} /countries/:id Request a specific country
  * @apiName GetCountry
  * @apiGroup Country
  * 
@@ -67,6 +71,7 @@ router.get("/", function (req, res, next) {
  * 
  * @apiSuccess {String} alpha2      Alpha 2 code of the country.
  * @apiSuccess {String} alpha3      Alpha 3 code of the country.
+ * @apiSuccess {String} noc         NOC of the country.
  * @apiSuccess {String} name        Name of the country.
  * @apiSuccess {String} id          ID of the country.
  * 
@@ -75,6 +80,7 @@ router.get("/", function (req, res, next) {
  *      {
  *         "alpha2": "CH",
  *         "alpha3": "CHE",
+ *         "noc": "SUI",
  *         "name": "Switzerland",
  *         "id": "64e2fdc570e6702dfc9cfed0"
  *      }
@@ -95,16 +101,18 @@ router.get("/:id", function (req, res, next) {
 
 
 /**
- * @api {post} /country Add a new country
+ * @api {post} /countries Add a new country
  * @apiName PostCountry
  * @apiGroup Country
  * 
  * @apiBody {String} alpha2      Alpha 2 code of the country.
  * @apiBody {String} alpha3      Alpha 3 code of the country.
+ * @apiBody {String} noc         NOC of the country.
  * @apiBody {String} name        Name of the country.
  * 
  * @apiSuccess {String} alpha2      Alpha 2 code of the country.
  * @apiSuccess {String} alpha3      Alpha 3 code of the country.
+ * @apiSuccess {String} noc         NOC of the country.
  * @apiSuccess {String} name        Name of the country.
  * @apiSuccess {String} id          ID of the country.
  * 
@@ -113,6 +121,7 @@ router.get("/:id", function (req, res, next) {
  *      {
  *         "alpha2": "CH",
  *         "alpha3": "CHE",
+ *         "noc": "SUI",
  *         "name": "Switzerland",
  *         "id": "64e2fdc570e6702dfc9cfed0"
  *      }
@@ -131,7 +140,7 @@ router.post("/", function (req, res, next) {
 
 
 /**
- * @api {put} /country/:id Update a country
+ * @api {put} /countries/:id Update a country
  * @apiName PutCountry
  * @apiGroup Country
  * 
@@ -139,18 +148,21 @@ router.post("/", function (req, res, next) {
  * 
  * @apiBody {String} alpha2      Alpha 2 code of the country.
  * @apiBody {String} alpha3      Alpha 3 code of the country.
+ * @apiBody {String} noc         NOC of the country.
  * @apiBody {String} name        Name of the country.
  * 
  * @apiSuccess {String} alpha2      Alpha 2 code of the country.
  * @apiSuccess {String} alpha3      Alpha 3 code of the country.
+ * @apiSuccess {String} noc         NOC of the country.
  * @apiSuccess {String} name        Name of the country.
  * @apiSuccess {String} id          ID of the country.
  * 
  * @apiSuccessExample {json} Success-Response:
- *     HTTP/1.1 201 Created
+ *     HTTP/1.1 200 OK
  *      {
  *         "alpha2": "CH",
  *         "alpha3": "CHE",
+ *         "noc": "SUI",
  *         "name": "Switzerland",
  *         "id": "64e2fdc570e6702dfc9cfed0"
  *      }
@@ -162,6 +174,7 @@ router.post("/", function (req, res, next) {
  */
 router.put("/:id", function (req, res, next) {
     Country.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedCountry) => {
+        console.log(updatedCountry);
         res.send(updatedCountry);
     }).catch((err) => {
         res.status(409).send(err)
@@ -170,7 +183,7 @@ router.put("/:id", function (req, res, next) {
 });
 
 /**
- * @api {delete} /country/:id Remove a country
+ * @api {delete} /countries/:id   Remove a country
  * @apiName DeleteCountry
  * @apiGroup Country
  * 

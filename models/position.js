@@ -17,6 +17,10 @@ const positionSchema = new Schema({
         min: 1,
         max: 30
     },
+    runnedDistance: {
+        type: Number,
+        min: 0
+    },
     gapToLeader: {
         type: Number,
         min: 0.0,

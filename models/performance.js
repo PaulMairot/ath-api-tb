@@ -17,7 +17,6 @@ const performanceSchema = new Schema({
     },
     lane: {
         type: Number,
-        required: true,
         min: 1,
         max: 10
     },
@@ -37,6 +36,13 @@ const performanceSchema = new Schema({
         type: Number,
         min: -10.0,
         max: 10.0
+    },
+    stepsHurldes: {
+        type: Number,
+        min: 0
+    },
+    exchangeTime: {
+        type: Date
     },
     mention: [{
         type: String,

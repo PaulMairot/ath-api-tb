@@ -16,6 +16,12 @@ const countrySchema = new Schema({
         minlength: [3, "The alpha3 code of a country must have exactly 3 characters."],
         maxlength: [3, "The alpha3 code of a country must have exactly 3 characters."]
     },
+    noc: {
+        type: String,
+        required: true,
+        minlength: [3, "The NOC of a country must have exactly 3 characters."],
+        maxlength: [3, "The NOC of a country must have exactly 3 characters."]
+    },
     name: {
         type: String,
         required: true,
@@ -30,6 +36,7 @@ countrySchema.pre('save', function (next) {
     // Capitalize codes
     this.alpha2 = this.alpha2.toUpperCase();
     this.alpha3 = this.alpha3.toUpperCase();
+    this.noc = this.noc.toUpperCase();
 
     next();
 });
