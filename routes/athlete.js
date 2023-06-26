@@ -82,7 +82,7 @@ router.get("/", function (req, res, next) {
  * @apiSuccess {Array}     discipline      List of discipline practiced by the athlete.
  * @apiSuccess {String}    id              ID of the athlete.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 200 OK
  *      {
  *          "lastName": "Bolt",
@@ -130,7 +130,7 @@ router.get("/:id", function (req, res, next) {
  * @apiSuccess {Array}     discipline      List of discipline practiced by the athlete added.
  * @apiSuccess {String}    id              ID of the athlete added.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Example:
  *      HTTP/1.1 201 Created
  *      {
  *          "lastName": "Fraser-pryce",
@@ -178,7 +178,7 @@ router.post("/", function (req, res, next) {
  * @apiSuccess {Array}     discipline      List of discipline practiced by the athlete updated.
  * @apiSuccess {String}    id              ID of the athlete updated.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 200 OK
  *      {
  *          "lastName": "Fraser-pryce",

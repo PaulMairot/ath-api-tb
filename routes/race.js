@@ -85,7 +85,7 @@ router.get("/", function (req, res, next) {
  * @apiSuccess {Array}   performances        List of performances associated with the race.
  * @apiSuccess {String}  id                  ID of the race
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      {
  *          "meeting": {...},
@@ -146,7 +146,7 @@ router.get("/:id", function (req, res, next) {
  * @apiSuccess {Array}   performances        List of performances associated with the new race.
  * @apiSuccess {String}  id                  ID of the new race
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      {
  *          "meeting": {...},
@@ -209,7 +209,7 @@ router.post("/", function (req, res, next) {
  * @apiSuccess {Array}   performances        List of performances associated with the updated race.
  * @apiSuccess {String}  id                  ID of the updated race
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      {
  *          "meeting": {...},

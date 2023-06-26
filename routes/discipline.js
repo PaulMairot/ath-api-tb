@@ -70,7 +70,7 @@ router.get("/", function (req, res, next) {
  * @apiSuccess {String} gender          Gender of the discipline (women, men, girls, boys, mixed).
  * @apiSuccess {String} id              ID of the discipline.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 200 OK
  *      {
  *          "type": "hurdles",
@@ -108,7 +108,7 @@ router.get("/:id", function (req, res, next) {
  * @apiSuccess {String} gender       Gender of the discipline (women, men, girls, boys, mixed).
  * @apiSuccess {String} id           ID of the discipline.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 201 Created
  *      {
  *          "type": "relay",
@@ -147,7 +147,7 @@ router.post("/", function (req, res, next) {
  * @apiSuccess {String} gender       Gender of the updated discipline (women, men, girls, boys, mixed).
  * @apiSuccess {String} id           ID of the updated discipline.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 200 OK
  *      {
  *          "type": "none",

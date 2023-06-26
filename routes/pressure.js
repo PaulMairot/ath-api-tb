@@ -61,7 +61,7 @@ router.get("/", function (req, res, next) {
  * @apiSuccess {Array}  time            List of time.
  * @apiSuccess {Array}  pressure        List of pressure.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *      HTTP/1.1 200 OK
  *      {
  *          "athlete": {...},
@@ -101,7 +101,7 @@ router.get("/:id", function (req, res, next) {
  * @apiSuccess {Array}  time            List of time.
  * @apiSuccess {Array}  pressure        List of pressure.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      {
  *          "athlete": {...},
@@ -141,7 +141,7 @@ router.post("/", function (req, res, next) {
  * @apiSuccess {Array}  time            List of time.
  * @apiSuccess {Array}  pressure        List of pressure.
  * 
- * @apiSuccessExample {json} Request-Example:
+ * @apiSuccessExample {json} Success-Response:
  *     HTTP/1.1 200 OK
  *      {
  *          "athlete": {...},
