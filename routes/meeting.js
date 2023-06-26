@@ -17,8 +17,10 @@ const router = express.Router();
  * @apiParamExample {json} Request-Example:
  *     {
  *       "limit": 2,
- *       "Date": "2023-05-28",
- *       "alpha3": "che"
+ *       "fromDate": "2023-05-28",
+ *       "date": "2023-05-28",
+ *       "country": "07b011c58932564858f9e9f0",
+ *       "city": "Doha"
  *     }
  *
  * @apiSuccess {Object[]} meeting       List of meetings.

@@ -24,9 +24,10 @@ const router = express.Router();
  * 
  * @apiParamExample {json} Request-Example:
  *     {
- *       "limit": 2,
- *       "Date": "2023-05-28",
- *       "alpha3": "che"
+ *       "athlete": "f5481583fe9630109995821c",
+ *       "race": "f5481583fe9630109995821c",
+ *       "result": 10,
+ *       "reactionTime": 140
  *     }
  *
  * @apiSuccess {Object[]} performance       List of performances.

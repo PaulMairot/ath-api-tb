@@ -110,7 +110,7 @@ router.get("/:id", function (req, res, next) {
 
 
 /**
- * @api {post} /athletes Create a new athlete
+ * @api {post} /athletes Add a new athlete
  * @apiName PostAthlete
  * @apiGroup Athlete
  * 
@@ -156,7 +156,7 @@ router.post("/", function (req, res, next) {
 
 
 /**
- * @api {put} /athletes/:id Update a athlete
+ * @api {put} /athletes/:id Update an athlete
  * @apiName PutAthlete
  * @apiGroup Athlete
  * 
@@ -205,7 +205,7 @@ router.put("/:id", function (req, res, next) {
 
 
 /**
- * @api {delete} /athletes/:id Remove a athlete
+ * @api {delete} /athletes/:id Remove an athlete
  * @apiName DeleteAthlete
  * @apiGroup Athlete
  * 

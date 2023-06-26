@@ -14,11 +14,11 @@ const router = express.Router();
  * @apiParam {String} [gender]      Filter disciplines by gender (women, men, girls, boys, mixed).
  * 
  * @apiParamExample {json} Request-Example:
- *      {
- *          "type": "none",
- *          "distance": 100,
- *          "gender": "women",
- *          "id": "83bd8e00bd84e42535a5c9bd"
+ *      {   
+ *          "limit": 5
+ *          "type": "hurdles",
+ *          "distance": 200,
+ *          "gender": "women"
  *      }
  *
  * @apiSuccess {Object[]} discipline       List of disciplines.
@@ -95,7 +95,7 @@ router.get("/:id", function (req, res, next) {
 
 
 /**
- * @api {post} /disciplines Create a new discipline
+ * @api {post} /disciplines Add a new discipline
  * @apiName PostDiscipline
  * @apiGroup Discipline
  * 

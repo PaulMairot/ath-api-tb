@@ -106,7 +106,7 @@ router.get("/:id", function (req, res, next) {
 
 
 /**
- * @api {post} /records Create a new record
+ * @api {post} /records Add a new record
  * @apiName PostRecord
  * @apiGroup Record
  * 

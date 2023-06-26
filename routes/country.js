@@ -17,7 +17,8 @@ const router = express.Router();
  *     {
  *       "name": "Switzerland",
  *       "alpha2": "ch",
- *       "alpha3": "che"
+ *       "alpha3": "che",
+ *       "noc": "sui"
  *     }
  *
  * @apiSuccess {Object[]} country       List of countries.

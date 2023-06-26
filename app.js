@@ -6,7 +6,6 @@ import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 
 import disciplineRouter from "./routes/discipline.js";
-import weatherRouter from "./routes/weather.js";
 import countryRouter from "./routes/country.js";
 import athleteRouter from "./routes/athlete.js";
 import meetingRouter from "./routes/meeting.js";
@@ -14,6 +13,7 @@ import raceRouter from "./routes/race.js";
 import pressureRouter from "./routes/pressure.js";
 import positionRouter from "./routes/position.js";
 import performanceRouter from "./routes/performance.js";
+import recordRouter from "./routes/record.js";
 
 import * as config from "./config.js";
 
@@ -30,15 +30,15 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
-app.use("/discipline", disciplineRouter);
-app.use("/weather", weatherRouter);
-app.use("/country", countryRouter);
-app.use("/athlete", athleteRouter);
-app.use("/meeting", meetingRouter);
-app.use("/race", raceRouter);
-app.use("/pressure", pressureRouter);
-app.use("/position", positionRouter);
-app.use("/performance", performanceRouter);
+app.use("/disciplines", disciplineRouter);
+app.use("/countries", countryRouter);
+app.use("/athletes", athleteRouter);
+app.use("/meetings", meetingRouter);
+app.use("/races", raceRouter);
+app.use("/pressures", pressureRouter);
+app.use("/positions", positionRouter);
+app.use("/performances", performanceRouter);
+app.use("/records", recordRouter);
 
 // Serve the apiDoc documentation.
 app.use('/apidoc', express.static('docs'));

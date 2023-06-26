@@ -87,7 +87,7 @@ router.get("/:id", function (req, res, next) {
 
 
 /**
- * @api {post} /pressures Create a new pressure
+ * @api {post} /pressures Add a new pressure
  * @apiName PostPressure
  * @apiGroup Pressure
  * 
