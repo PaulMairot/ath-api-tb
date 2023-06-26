@@ -139,13 +139,15 @@ router.get("/:id", function (req, res, next) {
  */
 router.post("/", function (req, res, next) {
     const newRecord = new Record(req.body);
-
+    console.log(newRecord);
+    next();
+    /*
     newRecord.save().then((savedRecord) => {
         res.status(201).send(savedRecord);
     }).catch((err) => {
         res.status(409).send(err);
     });
-
+    */
 });
 
 
@@ -188,7 +190,11 @@ router.post("/", function (req, res, next) {
  */
 router.put("/:id", function (req, res, next) {
     Record.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedRecord) => {
-        res.send(updatedRecord);
+        if (updatedRecord == null) {
+            res.status(404).send("Record with ID " + req.params.id + " not found.");
+        } else {
+            res.send(updatedRecord);
+        }
     }).catch((err) => {
         res.status(409).send(err)
     })

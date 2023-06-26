@@ -46,7 +46,6 @@ router.post("/", function (req, res, next) {
 
 router.put("/:id", function (req, res, next) {
     Weather.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedWeather) => {
-        console.log(updatedWeather);
         res.send(updatedWeather);
     }).catch((err) => {
         res.status(409).send(err)

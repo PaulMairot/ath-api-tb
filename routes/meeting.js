@@ -63,13 +63,12 @@ router.get("/", function (req, res, next) {
                             return word[0].toUpperCase() + word.substring(1); 
                         }).join(" ");    
     };
-    //if (filters.startDate) { filters.startDate = new Date(filters.startDate).toISOString()}
+    
     if(filters.city) { filters.city = filters.city.charAt(0).toUpperCase() + filters.city.slice(1).toLowerCase(); };
     
     if(req.query.fromDate) { req.query.fromDate = new Date(req.query.fromDate).toISOString()}
     if(req.query.date) { req.query.date = new Date(req.query.date).toISOString()}
 
-    console.log(req.query.fromDate);
     Meeting.find({
             ...filters,
             ...req.query.fromDate ? { startDate: { $gte: req.query.fromDate } } : {},

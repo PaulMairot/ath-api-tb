@@ -52,7 +52,7 @@ router.get("/", function (req, res, next) {
     if(filters.state)       { filters.state = filters.state.toLowerCase() };
 
     Race.find({...filters})
-        .populate(['meeting', 'discipline', 'athletes'])
+        .populate(['meeting', 'discipline', 'athletes', 'performances'])
         .then((races) => {
             if (races.length === 0) {
                 res.status(404).send("No race found.")
@@ -60,7 +60,6 @@ router.get("/", function (req, res, next) {
                 res.send(races);
             }
         }).catch((err) => {
-            //console.log(err);
             return next(err);
         });
 });

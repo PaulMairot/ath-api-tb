@@ -175,7 +175,6 @@ router.post("/", function (req, res, next) {
  */
 router.put("/:id", function (req, res, next) {
     Country.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedCountry) => {
-        console.log(updatedCountry);
         res.send(updatedCountry);
     }).catch((err) => {
         res.status(409).send(err)
