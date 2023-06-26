@@ -1,16 +1,19 @@
 import mongoose from 'mongoose';
-import { transformJson } from '../spec/utils.js';
+import { format } from 'date-fns'
+import { transformJson, formatTimeRace } from '../spec/utils.js';
 
 const Schema = mongoose.Schema;
 
 const positionSchema = new Schema({
     athlete: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Athlete'
+        ref: 'Athlete',
+        required: true
     },
     race: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Race'
+        ref: 'Race',
+        required: true
     },
     rank: {
         type: Number,
@@ -32,16 +35,21 @@ const positionSchema = new Schema({
         max: 100.0
     },
     time: {
-        type: Date
+        type: Date,
+        get: formatTimeRace,
+        required: true
+        
     },
     coordinates: [{
         type: Number,
-        min: 0
+        min: 0,
+        required: true
     }]
 });
 
 positionSchema.set("toJSON", {
-    transform: transformJson
+    transform: transformJson,
+    getters: true
 });
 
 // Create the model from the schema and export it

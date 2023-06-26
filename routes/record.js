@@ -10,14 +10,17 @@ const router = express.Router();
  * 
  * @apiParam {Number} [limit]       Limit the number of results.
  * @apiParam {String} [athlete]     Filter records by athlete ID.
- * @apiParam {String} [mention]     Filter records by mention ID.
  * @apiParam {String} [country]     Filter records by country ID (for national record only).
+ * @apiParam {String} [discipline]  Filter records by discipline ID.
+ * @apiParam {String} [mention]     Filter records by mention ID.
  * 
  * @apiParamExample {json} Request-Example:
  *      {
  *          "athlete": "8384e42535adc9bd00b5bd8e",
  *          "race": "4e42535a0bd5c9b83bd8e08d",
- *          "mention": "WR"
+ *          "country": "4e8dbd8e08d5342535a0bc9b",
+ *          "discipline": "2535a0b49b83bd8e4d5ce08d",
+ *          "mention": "NR",
  *      }
  *
  * @apiSuccess {Object[]} record       List of records.
@@ -28,14 +31,18 @@ const router = express.Router();
  *      {
  *          "athlete": {...},
  *          "race": {...},
+ *          "discipline": {...},
+ *          "performance": {...},
  *          "mention": "WR",
  *          "id": "8d835a5e00cd8bd84ee259bd"
  *      },
  *      {
  *          "athlete": {...},
  *          "race": {...},
+ *          "discipline": {...},
+ *          "country": {...},
+ *          "performance": {...},
  *          "mention": "NR",
- *          "country": {...}
  *          "id": "59bd8a5d84ee2e0d8350cd8b"
  *      },
  *     ]
@@ -65,16 +72,20 @@ router.get("/", function (req, res, next) {
  * 
  * @apiParam   {String} id            Record unique ID.
  * 
- * @apiSuccess {Object} [athlete]     Athlete associated with record.
- * @apiSuccess {Object} [race]        Race associated with record.
- * @apiSuccess {String} [mention]     Mention of record.
- * @apiSuccess {Object} [country]     Country of record (for national record only).
- * @apiSuccess {String} id            ID of the record.
+ * @apiSuccess {Object} athlete         Athlete associated with record.
+ * @apiSuccess {Object} race            Race associated with record.
+ * @apiSuccess {String} [discipline]    Discipline associated with record.
+ * @apiSuccess {Object} [country]       Country of record (for national record only).
+ * @apiSuccess {String} performance     Performance associated with record.
+ * @apiSuccess {String} mention         Mention of record.
+ * @apiSuccess {String} id              ID of the record.
  * 
  * @apiSuccessExample {json} Request-Example:
  *      {
  *          "athlete": {...},
  *          "race": {...},
+ *          "discipline": {...},
+ *          "performance": {...},
  *          "mention": "WR",
  *          "id": "8d835a5e00cd8bd84ee259bd"
  *      }
@@ -99,23 +110,30 @@ router.get("/:id", function (req, res, next) {
  * @apiName PostRecord
  * @apiGroup Record
  * 
- * @apiBody {String} athlete       ID of the athlete associated with record.
- * @apiBody {String} race          ID of the race associated with record.
- * @apiBody {String} mention       Mention associated with record.
- * @apiBody {String} [country]     ID of the country associated with record (for national record only).
+ * @apiBody {String} athlete        ID of the athlete associated with record.
+ * @apiBody {String} race           ID of the race associated with record.
+ * @apiBody {String} [discipline]   ID of the discipline associated with record.
+ * @apiBody {String} [performance]  ID of the performance associated with record.
+ * @apiBody {String} mention        Mention associated with record.
+ * @apiBody {String} [country]      ID of the country associated with record (for national record only).
  * 
- * @apiSuccess {Object} [athlete]     Athlete associated with record.
- * @apiSuccess {Object} [race]        Race associated with record.
- * @apiSuccess {String} [mention]     Mention of record.
- * @apiSuccess {Object} [country]     Country of the record (for national record only).
- * @apiSuccess {String} id            ID of the record.
+ * @apiSuccess {Object} athlete         Athlete associated with new record.
+ * @apiSuccess {Object} race            Race associated with new record.
+ * @apiSuccess {String} [discipline]    Discipline associated with new record.
+ * @apiSuccess {Object} [country]       Country of new record (for national record only).
+ * @apiSuccess {String} performance     Performance associated with new record.
+ * @apiSuccess {String} mention         Mention of new record.
+ * @apiSuccess {String} id              ID of the new record.
  * 
  * @apiSuccessExample {json} Request-Example:
  *      {
  *          "athlete": {...},
  *          "race": {...},
- *          "mention": "MR",
- *          "id": "8d835a5e00cd8bd84ee259bd"
+ *          "discipline": {...},
+ *          "country": {...},
+ *          "performance": {...},
+ *          "mention": "NR",
+ *          "id": "59bd8a5d84ee2e0d8350cd8b"
  *      }
  * 
  */
@@ -136,23 +154,30 @@ router.post("/", function (req, res, next) {
  * @apiName PutRecord
  * @apiGroup Record
  * 
- * @apiParam   {String} id              Record unique ID.
+ * @apiParam   {String} id          Record unique ID.
  * 
- * @apiBody {String} [athlete]       ID of the athlete associated with record.
- * @apiBody {String} [race]          ID of the race associated with record.
- * @apiBody {String} [mention]       Mention associated with record.
- * @apiBody {String} [country]       ID of the country associated with record (for national record only).
+ * @apiBody {String} athlete        ID of the athlete associated with record.
+ * @apiBody {String} race           ID of the race associated with record.
+ * @apiBody {String} [discipline]   ID of the discipline associated with record.
+ * @apiBody {String} [performance]  ID of the performance associated with record.
+ * @apiBody {String} mention        Mention associated with record.
+ * @apiBody {String} [country]      ID of the country associated with record (for national record only).
  * 
- * @apiSuccess {Object} [athlete]     Athlete associated with record.
- * @apiSuccess {Object} [race]        Race associated with record.
- * @apiSuccess {String} [mention]     Mention of record.
- * @apiSuccess {Object} [country]     Country of the record (for national record only).
- * @apiSuccess {String} id            ID of the record.
+ * @apiSuccess {Object} athlete         Athlete associated with updated record.
+ * @apiSuccess {Object} race            Race associated with updated record.
+ * @apiSuccess {String} [discipline]    Discipline associated with updated record.
+ * @apiSuccess {Object} [country]       Country of updated record (for national record only).
+ * @apiSuccess {String} performance     Performance associated with updated record.
+ * @apiSuccess {String} mention         Mention of updated record.
+ * @apiSuccess {String} id              ID of the updated record.
  * 
  * @apiSuccessExample {json} Request-Example:
  *      {
  *          "athlete": {...},
  *          "race": {...},
+ *          "discipline": {...},
+ *          "country": {...},
+ *          "performance": {...},
  *          "mention": "MR",
  *          "id": "8d835a5e00cd8bd84ee259bd"
  *      }

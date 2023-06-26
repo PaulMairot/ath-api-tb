@@ -12,6 +12,43 @@ String.prototype.toObjectId = function() {
 
 const router = express.Router();
 
+/**
+ * @api {get} /performances Request a list of performance
+ * @apiName GetPerformances
+ * @apiGroup Performance
+ * 
+ * @apiParam {String} [athlete]         Filter performance by athlete ID.
+ * @apiParam {String} [race]            Filter performance by race ID.
+ * @apiParam {Date}   [result]          Filter from specified result.
+ * @apiParam {String} [reactionTime]    Filter from specified reaction time.
+ * 
+ * @apiParamExample {json} Request-Example:
+ *     {
+ *       "limit": 2,
+ *       "Date": "2023-05-28",
+ *       "alpha3": "che"
+ *     }
+ *
+ * @apiSuccess {Object[]} performance       List of performances.
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *     [
+ *       {
+ *          "athlete" : {...},
+ *          "race": {...},
+ *          "lane": 4,
+ *          "result": "14.115",
+ *          "position": [{...}, {...}],
+ *          "startingPressure": {...},
+ *          "reactionTime": 132,
+ *          "mention" : ["NB"]
+ *          "id" : "1583f63019582099e9481cf5"
+ *       }
+ *     ]
+ * 
+ * @apiError NoPerformanceFound    No performance found.
+ */
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.reactionTime;
@@ -34,6 +71,39 @@ router.get("/", function (req, res, next) {
         });
 });
 
+
+/**
+ * @api {get} /performances/:id Request a specific meeting
+ * @apiName GetPerformance
+ * @apiGroup Performance
+ * 
+ * @apiParam   {String} id          Performance unique ID.
+ * 
+ * @apiSuccess {Object} athlete                 Athlete related to performance.
+ * @apiSuccess {Object} race                    Race related to performance.
+ * @apiSuccess {Number} Lane                    Lane of the athlete for the performance.
+ * @apiSuccess {Array}  position                Array of all mesured position of athlete during the performance.
+ * @apiSuccess {Object} startingPressure        Starting pressure of the performance.
+ * @apiSuccess {Number} reactionTime            Reaction time of the athlete for the performance.
+ * @apiSuccess {Array}  mention                 Mention(s) obtained by the athlete for the performance.
+ * @apiSuccess {String} id                      ID of the performance.
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *      }
+ *          "athlete" : {...},
+ *          "race": {...},
+ *          "lane": 4,
+ *          "result": "14.115",
+ *          "position": [{...}, {...}],
+ *          "startingPressure": {...},
+ *          "reactionTime": 132,
+ *          "mention" : ["NB"]
+ *          "id" : "e96301099481583f95821cf5"
+ *     }
+ * 
+ * @apiError PerformanceNotFound The <code>id</code> of the Performance was not found.
+ */
 router.get("/:id", function (req, res, next) {
     Performance.findById(req.params.id).populate('country').then((performance) => {
         if (performance == null) {
@@ -46,6 +116,44 @@ router.get("/:id", function (req, res, next) {
     });
 });
 
+
+/**
+ * @api {post} /performances Add a new performance
+ * @apiName PostPerformance
+ * @apiGroup Performance
+ * 
+ * @apiBody {Object} athlete                 Athlete related to performance.
+ * @apiBody {Object} race                    Race related to performance.
+ * @apiBody {Number} [Lane]                    Lane of the athlete for the performance.
+ * @apiBody {Array}  [position]                Array of all mesured position of athlete during the performance.
+ * @apiBody {Object} [startingPressure]        Starting pressure of the performance.
+ * @apiBody {Number} [reactionTime]            Reaction time of the athlete for the performance.
+ * @apiBody {Array}  [mention]                 Mention(s) obtained by the athlete for the performance.
+ * 
+ * @apiSuccess {Object} athlete                 Athlete related to new performance.
+ * @apiSuccess {Object} race                    Race related to new performance.
+ * @apiSuccess {Number} Lane                    Lane of the athlete for the new performance.
+ * @apiSuccess {Array}  position                Array of all mesured position of athlete during the new performance.
+ * @apiSuccess {Object} startingPressure        Starting pressure of the new performance.
+ * @apiSuccess {Number} reactionTime            Reaction time of the athlete for th new performance.
+ * @apiSuccess {Array}  mention                 Mention(s) obtained by the athlete for the new performance.
+ * @apiSuccess {String} id                      ID of the new performance.
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *      }
+ *          "athlete" : {...},
+ *          "race": {...},
+ *          "lane": 4,
+ *          "result": "14.115",
+ *          "position": [{...}, {...}],
+ *          "startingPressure": {...},
+ *          "reactionTime": 132,
+ *          "mention" : ["NB"]
+ *          "id" : "e96301099481583f95821cf5"
+ *     }
+ * 
+ */
 router.post("/", async function (req, res, next) {
 
     // If no result defined, take last time as result
@@ -94,6 +202,50 @@ router.post("/", async function (req, res, next) {
 
 });
 
+
+/**
+ * @api {put} /performances/:id Update a performance
+ * @apiName PutPerformance
+ * @apiGroup Performance
+ * 
+ * @apiParam   {String} id             Performance unique ID.
+ * 
+ * @apiBody {Object} [athlete]                 ID of athlete related to performance.
+ * @apiBody {Object} [race]                    ID of race related to performance.
+ * @apiBody {Number} [Lane]                    Lane of the athlete for the performance.
+ * @apiBody {Array}  [position]                Array of all mesured position of athlete during the performance.
+ * @apiBody {Object} [startingPressure]        ID of starting pressure of the performance.
+ * @apiBody {Number} [reactionTime]            Reaction time of the athlete for the performance.
+ * @apiBody {Array}  [mention]                 Mention(s) obtained by the athlete for the performance.
+ * 
+ * @apiSuccess {Object} athlete                 Athlete related to updated performance.
+ * @apiSuccess {Object} race                    Race related to updated performance.
+ * @apiSuccess {Number} Lane                    Lane of the athlete for the updated performance.
+ * @apiSuccess {Array}  position                Array of all mesured position of athlete during the updated performance.
+ * @apiSuccess {Object} startingPressure        Starting pressure of the updated performance.
+ * @apiSuccess {Number} reactionTime            Reaction time of the athlete for th updated performance.
+ * @apiSuccess {Array}  mention                 Mention(s) obtained by the athlete for the updated performance.
+ * @apiSuccess {String} id                      ID of the updated performance.
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 200 OK
+ *      }
+ *          "athlete" : {...},
+ *          "race": {...},
+ *          "lane": 4,
+ *          "result": "14.115",
+ *          "position": [{...}, {...}],
+ *          "startingPressure": {...},
+ *          "reactionTime": 132,
+ *          "mention" : ["NB"]
+ *          "id" : "e96301099481583f95821cf5"
+ *     }
+ * 
+ * 
+ * @apiError PerformanceNotFound    The <code>id</code> of the Performance was not found.
+ * @apiError Conflict           Data passed do not follow the model.
+ * 
+ */
 router.put("/:id", function (req, res, next) {
     Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedPerformance) => {
         res.send(updatedPerformance);
@@ -103,6 +255,21 @@ router.put("/:id", function (req, res, next) {
 
 });
 
+
+/**
+ * @api {delete} /performances/:id   Remove a performance
+ * @apiName DeletePerformance
+ * @apiGroup Performance
+ * 
+ * @apiParam   {String} id      Performance unique ID.
+ * 
+ * @apiSuccessExample {json} Success-Response:
+ *     HTTP/1.1 204 No Content
+ *     {}
+ * 
+ * @apiError PerformanceNotFound    The <code>id</code> of the Performance was not found.
+ * 
+ */
 router.delete("/:id", function (req, res, next) {
     Performance.findById(req.params.id).deleteOne().then((deletedPerformance) => {
         if (!deletedPerformance.deletedCount) {

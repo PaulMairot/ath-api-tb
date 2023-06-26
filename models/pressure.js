@@ -6,21 +6,25 @@ const Schema = mongoose.Schema;
 const pressureSchema = new Schema({
     athlete: { 
         type : mongoose.Schema.Types.ObjectId, 
-        ref: 'Athlete' 
+        ref: 'Athlete',
+        required: true
     },
     race: { 
         type : mongoose.Schema.Types.ObjectId, 
-        ref: 'Race' 
+        ref: 'Race',
+        required: true
     },
     time: [{ 
         type : Number,
+        required: true,
         min: -1000,
         max: 1000
     }],
     pressure: [{ 
         type : Number,
+        required: true,
         min: 0,
-        max: 2000
+        max: 3000
     }],
 });
 

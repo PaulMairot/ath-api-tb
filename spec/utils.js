@@ -18,3 +18,13 @@ export function formatTime(time) {
   time = new Date(time.valueOf() + time.getTimezoneOffset() * 60 * 1000);
   return format(time, 'HH:mm:ss');
 }
+
+export function formatTimeRace(time) {
+  // Remove timezone offset
+  time = new Date(time.valueOf() + time.getTimezoneOffset() * 60 * 1000);
+  
+  // Adjust time format tokens
+  let formatTokens = "HH:mm:ss.SSS";
+
+  return format(time, formatTokens);
+}
