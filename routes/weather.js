@@ -4,7 +4,7 @@ import Weather from "../models/weather.js";
 const router = express.Router();
 
 /**
- * @api {get} /weather Request a list of weather
+ * @api {get} /weather Request a list of weathers
  * @apiName GetWeathers
  * @apiGroup Weather
  * 

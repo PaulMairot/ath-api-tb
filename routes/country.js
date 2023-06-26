@@ -4,7 +4,7 @@ import Country from "../models/country.js";
 const router = express.Router();
 
 /**
- * @api {get} /countries Request a list of country
+ * @api {get} /countries Request a list of countries
  * @apiName GetCountries
  * @apiGroup Country
  * 

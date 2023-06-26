@@ -4,7 +4,7 @@ import Pressure from "../models/pressure.js";
 const router = express.Router();
 
 /**
- * @api {get} /pressures Request a list of pressure
+ * @api {get} /pressures Request a list of pressures
  * @apiName GetPressures
  * @apiGroup Pressure
  * 
@@ -62,6 +62,7 @@ router.get("/", function (req, res, next) {
  * @apiSuccess {Array}  pressure        List of pressure.
  * 
  * @apiSuccessExample {json} Request-Example:
+ *      HTTP/1.1 200 OK
  *      {
  *          "athlete": {...},
  *          "race": {...},
@@ -90,8 +91,8 @@ router.get("/:id", function (req, res, next) {
  * @apiName PostPressure
  * @apiGroup Pressure
  * 
- * @apiBody {Object} athlete         Athlete associated with pressure.
- * @apiBody {Object} race            Race associated with pressure.
+ * @apiBody {Object} athlete         Athlete ID associated with pressure.
+ * @apiBody {Object} race            Race ID associated with pressure.
  * @apiBody {Array}  time            List of time.
  * @apiBody {Array}  pressure        List of pressure.
  * 
@@ -101,6 +102,7 @@ router.get("/:id", function (req, res, next) {
  * @apiSuccess {Array}  pressure        List of pressure.
  * 
  * @apiSuccessExample {json} Request-Example:
+ *     HTTP/1.1 200 OK
  *      {
  *          "athlete": {...},
  *          "race": {...},
@@ -129,8 +131,8 @@ router.post("/", function (req, res, next) {
  * 
  * @apiParam   {String} id          Pressure unique ID.
  * 
- * @apiBody {Object} athlete         Athlete associated with pressure.
- * @apiBody {Object} race            Race associated with pressure.
+ * @apiBody {Object} athlete         Athlete ID associated with pressure.
+ * @apiBody {Object} race            Race ID associated with pressure.
  * @apiBody {Array}  time            List of time.
  * @apiBody {Array}  pressure        List of pressure.
  * 
@@ -140,6 +142,7 @@ router.post("/", function (req, res, next) {
  * @apiSuccess {Array}  pressure        List of pressure.
  * 
  * @apiSuccessExample {json} Request-Example:
+ *     HTTP/1.1 200 OK
  *      {
  *          "athlete": {...},
  *          "race": {...},

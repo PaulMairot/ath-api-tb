@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { format, isDate } from 'date-fns'
 
 export function transformJson(doc, json, options) {
     delete json.__v;
@@ -15,16 +15,17 @@ export function formatDate(date) {
 
 export function formatTime(time) {
   // Remove timezone offset
-  time = new Date(time.valueOf() + time.getTimezoneOffset() * 60 * 1000);
-  return format(time, 'HH:mm:ss');
+  if (time != null) {
+    time = new Date(time.valueOf() + time.getTimezoneOffset() * 60 * 1000);
+    return format(time, 'HH:mm:ss');
+  }
+  
+  return null;
 }
 
 export function formatTimeRace(time) {
   // Remove timezone offset
   time = new Date(time.valueOf() + time.getTimezoneOffset() * 60 * 1000);
-  
-  // Adjust time format tokens
-  let formatTokens = "HH:mm:ss.SSS";
 
-  return format(time, formatTokens);
+  return format(time, "HH:mm:ss.SSS");
 }

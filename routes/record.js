@@ -4,7 +4,7 @@ import Record from "../models/record.js";
 const router = express.Router();
 
 /**
- * @api {get} /records Request a list of record
+ * @api {get} /records Request a list of records
  * @apiName GetRecords
  * @apiGroup Record
  * 

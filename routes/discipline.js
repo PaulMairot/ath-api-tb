@@ -4,7 +4,7 @@ import Discipline from "../models/discipline.js";
 const router = express.Router();
 
 /**
- * @api {get} /disciplines Request a list of discipline
+ * @api {get} /disciplines Request a list of disciplines
  * @apiName GetDisciplines
  * @apiGroup Discipline
  * 

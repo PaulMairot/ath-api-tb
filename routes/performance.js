@@ -13,7 +13,7 @@ String.prototype.toObjectId = function() {
 const router = express.Router();
 
 /**
- * @api {get} /performances Request a list of performance
+ * @api {get} /performances Request a list of performances
  * @apiName GetPerformances
  * @apiGroup Performance
  * 

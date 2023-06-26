@@ -4,7 +4,7 @@ import Athlete from "../models/athlete.js";
 const router = express.Router();
 
 /**
- * @api {get} /athletes Request a list of athlete
+ * @api {get} /athletes Request a list of athletes
  * @apiName GetAthletes
  * @apiGroup Athlete
  * 

@@ -39,15 +39,14 @@ const raceSchema = new Schema({
         enum: { values: ['sunny', 'cloudy', 'partly cloudy', 'clear skies', 'overcast', 'rainy', 'showers', 'drizzle', 'thunderstorms', 'lightning', 'hail', 'snowy', 'foggy', 'misty', 'smoggy', 'windy'], 
                 message: "{VALUE} is not supported, try a value from this list : [sunny, cloudy, partly cloudy, clear skies, overcast, rainy, showers, drizzle, thunderstorms, lightning, hail, snowy, foggy, misty, smoggy, windy]"}
     },
+    athletes: [{ 
+        type : mongoose.Schema.Types.ObjectId, 
+        ref: 'Athlete' 
+    }],
     performances: [{ 
         type : mongoose.Schema.Types.ObjectId, 
         ref: 'Performance'
     }],
-    athletes: [{ 
-        type : mongoose.Schema.Types.ObjectId, 
-        ref: 'Athlete' 
-    }]
-    
 });
 
 raceSchema.set("toJSON", {

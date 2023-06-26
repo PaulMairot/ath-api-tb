@@ -4,7 +4,7 @@ import Meeting from "../models/meeting.js";
 const router = express.Router();
 
 /**
- * @api {get} /meetings Request a list of meeting
+ * @api {get} /meetings Request a list of meetings
  * @apiName GetMeetings
  * @apiGroup Meeting
  * 

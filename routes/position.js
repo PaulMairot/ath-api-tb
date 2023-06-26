@@ -4,7 +4,7 @@ import Position from "../models/position.js";
 const router = express.Router();
 
 /**
- * @api {get} /positions Request a list of position
+ * @api {get} /positions Request a list of positions
  * @apiName GetPositions
  * @apiGroup Position
  * 
