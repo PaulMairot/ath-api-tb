@@ -29,11 +29,14 @@ const recordSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Performance',
     },
+    result: {
+        type: Date
+    },
     mention: {
         type: String,
         required: true,
-        enum: { values: ['NB', 'WB', 'MB', 'WR', 'OR', 'MR', 'NR'], 
-                message: "{VALUE} is not supported, try a value from this list : [NB, WB, MB, WR, OR, MR, NR]"}
+        enum: { values: ['WR', 'OR', 'PR', 'CR', 'GR', 'MR', 'DLR', 'NR', 'PB'], 
+                message: "{VALUE} is not supported, try a value from this list : [WR, OR, PR, CR, GR, MR, DLR, NR, PB]"}
     }
 });
 

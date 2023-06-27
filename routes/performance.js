@@ -1,5 +1,7 @@
 import express from "express";
 import mongoose, { isValidObjectId } from "mongoose";
+import { manageRecord } from '../spec/utils.js';
+
 import Performance from "../models/performance.js";
 import Pressure from "../models/pressure.js";
 import Position from "../models/position.js";
@@ -51,6 +53,7 @@ const router = express.Router();
  * @apiError NoPerformanceFound    No performance found.
  */
 router.get("/", function (req, res, next) {
+    
     let filters = Object.assign({}, req.query);
     delete filters.reactionTime;
     delete filters.result;
@@ -105,11 +108,19 @@ router.get("/", function (req, res, next) {
  * 
  * @apiError PerformanceNotFound The <code>id</code> of the Performance was not found.
  */
+//.populate(['athlete', 'race', 'position', 'startingPressure'])
 router.get("/:id", function (req, res, next) {
-    Performance.findById(req.params.id).populate('country').then((performance) => {
+    Performance.findById(req.params.id)
+    .populate([
+            {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
+            {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
+            {path: 'position'},
+            {path: 'startingPressure'}
+    ]).then((performance) => {
         if (performance == null) {
             res.status(404).send("No performance found with ID :" + req.params.id + ".")
         } else {
+            manageRecord(performance)
             res.send(performance);
         }
     }).catch((err) => {
@@ -156,15 +167,6 @@ router.get("/:id", function (req, res, next) {
  * 
  */
 router.post("/", async function (req, res, next) {
-
-    // If no result defined, take last time as result
-    if (!req.body.result && isValidObjectId(req.body.athlete) && isValidObjectId(req.body.race)) {
-        await Position.find({athlete: req.body.athlete, race: req.body.race}).sort({ "time": -1 }).limit(1).then((lastPosition) => {
-            if (lastPosition) {
-                req.body.result = lastPosition[0].time;
-            }
-        })
-    }
 
     // Auto-fill position with athlete and race IDs
     if (!req.body.position && isValidObjectId(req.body.athlete) && isValidObjectId(req.body.race)) {

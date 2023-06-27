@@ -22,7 +22,7 @@ const performanceSchema = new Schema({
     },
     result: {
         type: Date,
-        get: formatResult
+        //get: formatResult
     },
     position: [{ 
         type : mongoose.Schema.Types.ObjectId, 
@@ -46,8 +46,8 @@ const performanceSchema = new Schema({
     },
     mention: [{
         type: String,
-        enum: { values: ['SB', 'PB', 'NB', 'WB', 'MB', 'WR', 'OR', 'MR', 'NR', 'DNS', 'DNF', 'DQ'], 
-                message: "{VALUE} is not supported, try a value from this list : [SB, PB, NB, WB, MB, WR, OR, MR, NR, DNS, DNF, DQ]"}
+        enum: { values: ['WR', 'OR', 'PR', 'CR', 'GR', 'MR', 'DLR', 'NR', 'PB', 'DNS', 'DNF', 'DQ'], 
+                message: "{VALUE} is not supported, try a value from this list : [WR, OR, PR, CR, GR, MR, DLR, NR, PB, DNS, DNF, DQ]"}
     }]
 });
 
