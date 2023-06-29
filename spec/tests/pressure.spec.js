@@ -103,7 +103,7 @@ describe('GET /pressures', function() {
         // Create a race for the pressure
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete1.id, athlete2.id]});
 
-        // Create athletes for the race and pressure.
+        // Create pressures for retrieving tests.
         [ pressure1, pressure2 ] = await Promise.all([
             Pressure.create({athlete: athlete1.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]}),
             Pressure.create({athlete: athlete2.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [158,169,173,186,198,212]})

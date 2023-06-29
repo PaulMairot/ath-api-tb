@@ -120,7 +120,6 @@ router.get("/:id", function (req, res, next) {
         if (performance == null) {
             res.status(404).send("No performance found with ID :" + req.params.id + ".")
         } else {
-            manageRecord(performance)
             res.send(performance);
         }
     }).catch((err) => {
@@ -196,12 +195,13 @@ router.post("/", async function (req, res, next) {
             { _id: req.body.race }, { $push: { performances: savedPerformance._id }}
         )
 
+        // Check if performance is a record, save it in that case
+        manageRecord(performance);
+
         res.status(201).send(savedPerformance);
     }).catch((err) => {
         res.status(409).send(err);
     });
-
-    
 
 });
 
@@ -252,6 +252,8 @@ router.post("/", async function (req, res, next) {
 router.put("/:id", function (req, res, next) {
     Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedPerformance) => {
         res.send(updatedPerformance);
+        // Check if performance is a record, save it in that case
+        manageRecord(performance);
     }).catch((err) => {
         res.status(409).send(err)
     })

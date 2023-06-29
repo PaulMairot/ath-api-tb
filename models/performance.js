@@ -22,7 +22,7 @@ const performanceSchema = new Schema({
     },
     result: {
         type: Date,
-        //get: formatResult
+        get: formatResult
     },
     position: [{ 
         type : mongoose.Schema.Types.ObjectId, 
@@ -37,10 +37,10 @@ const performanceSchema = new Schema({
         min: -10.0,
         max: 10.0
     },
-    stepsHurldes: {
+    stepsHurldes: [{
         type: Number,
         min: 0
-    },
+    }],
     exchangeTime: {
         type: Date
     },
