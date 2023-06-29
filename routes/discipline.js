@@ -46,7 +46,7 @@ router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.limit;
 
-    Discipline.find({...filters}).limit(req.query.limit).then((disciplines) => {
+    Discipline.find({...filters}).limit(req.query.limit).sort({distance: 1}).then((disciplines) => {
         if (disciplines.length === 0) {
             res.status(404).send("No discipline found.")
         } else {

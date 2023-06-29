@@ -1,5 +1,15 @@
 import { format, parse, compareDesc, parseISO } from 'date-fns'
+
+import Athlete from "../models/athlete.js"
+import Country from "../models/country.js"
+import Discipline from "../models/discipline.js"
+import Meeting from "../models/meeting.js"
+import Performance from "../models/performance.js"
+import Position from "../models/position.js"
+import Pressure from "../models/pressure.js"
+import Race from "../models/race.js"
 import Record from '../models/record.js';
+
 
 export function transformJson(doc, json, options) {
     delete json.__v;
@@ -77,3 +87,18 @@ export async function manageRecord(performance) {
   });
   
 }
+
+
+export const cleanUpDatabase = async function() {
+  await Promise.all([
+    Athlete.deleteMany(),
+    Country.deleteMany(),
+    Discipline.deleteMany(),
+    Meeting.deleteMany(),
+    Performance.deleteMany(),
+    Position.deleteMany(),
+    Pressure.deleteMany(),
+    Race.deleteMany(),
+    Record.deleteMany()
+  ]);
+};
