@@ -48,11 +48,12 @@ const router = express.Router();
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
 
-    if (filters.plannedStartTime)  { filters.plannedStartTime = new Date(filters.plannedStartTime).toISOString() }
-    if(filters.state)       { filters.state = filters.state.toLowerCase() };
+    if (filters.plannedStartTime) { filters.plannedStartTime = new Date(filters.plannedStartTime).toISOString() }
+    if(filters.state) { filters.state = filters.state.toLowerCase() };
 
     Race.find({...filters})
         .populate(['meeting', 'discipline', 'athletes', 'performances'])
+        .sort({plannedStartTime: 1})
         .then((races) => {
             if (races.length === 0) {
                 res.status(404).send("No race found.")

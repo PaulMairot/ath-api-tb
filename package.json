@@ -7,7 +7,7 @@
     "start": "node ./bin/start",
     "dev": "nodemon",
     "apidoc": "apidoc -i routes -o docs",
-    "test": "cross-env DATABASE_URL=mongodb://localhost/ath-api-tb-test node --experimental-vm-modules node_modules/.bin/jest"
+    "test": "cross-env DATABASE_URL=mongodb://localhost/ath-api-tb-test node --experimental-vm-modules node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
     "date-fns": "^2.30.0",
