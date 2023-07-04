@@ -141,6 +141,10 @@ describe('PUT /countries', function() {
             })
             .expect(409)
             .expect('Content-Type', /json/)
+        expect(res.body.errors).toHaveProperty('alpha2');
+        expect(res.body.errors).toHaveProperty('alpha3');
+        expect(res.body.errors).toHaveProperty('noc');
+        expect(res.body.errors).toHaveProperty('name');
     });
 });
 

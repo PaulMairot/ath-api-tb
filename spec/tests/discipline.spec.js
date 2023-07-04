@@ -138,8 +138,11 @@ describe('PUT /disciplines', function() {
                 distance: 50,
                 gender: 'Everybody'
             })
-            .expect(409)
-            .expect('Content-Type', /json/)
+        .expect(409)
+        .expect('Content-Type', /json/)
+    expect(res.body.errors).toHaveProperty('type');
+    expect(res.body.errors).toHaveProperty('distance');
+    expect(res.body.errors).toHaveProperty('gender');
     });
 });
 

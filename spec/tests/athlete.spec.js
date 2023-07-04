@@ -45,7 +45,7 @@ describe('POST /athletes', function() {
         const res = await supertest(app)
             .post('/athletes')
             .send({
-                lastName: 'B',
+                lastName: '',
                 firstName: '',
                 dateOfBirth: 'date',
                 gender: 'dnk',
@@ -196,9 +196,9 @@ describe('PUT /athletes', function() {
         const res = await supertest(app)
             .put('/athletes/' + athlete.id)
             .send({
-                lastName: 'B',
+                lastName: '',
                 firstName: '',
-                dateOfBirth: '1989-13-32T00:00:00Z',
+                dateOfBirth: '1989-12-30T00:00:00Z',
                 gender: 'dnk',
                 nationality: discipline1.id,
                 discipline: [country.id, discipline2.id]
