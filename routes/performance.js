@@ -63,7 +63,12 @@ router.get("/", function (req, res, next) {
         ...req.query.reactionTime ? { reactionTime: { $gte: req.query.reactionTime } } : {},
         ...filters
     })
-        .populate(['athlete', 'race', 'position', 'startingPressure'])
+    .populate([
+        {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
+        {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
+        {path: 'position'},
+        {path: 'startingPressure'}
+    ])
         .sort({lane: 1}).then((performances) => {
             if (performances.length === 0) {
                 res.status(404).send("No performance found.")
@@ -186,7 +191,7 @@ router.post("/", async function (req, res, next) {
             
         })
     }
-
+    
     const newPerformance = new Performance(req.body);
 
     newPerformance.save().then(async (savedPerformance) => {
@@ -194,9 +199,9 @@ router.post("/", async function (req, res, next) {
         await Race.findOneAndUpdate(
             { _id: req.body.race }, { $push: { performances: savedPerformance._id }}
         )
-
+        
         // Check if performance is a record, save it in that case
-        manageRecord(performance);
+        await manageRecord(savedPerformance)
 
         res.status(201).send(savedPerformance);
     }).catch((err) => {
@@ -250,10 +255,13 @@ router.post("/", async function (req, res, next) {
  * 
  */
 router.put("/:id", function (req, res, next) {
-    Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedPerformance) => {
-        res.send(updatedPerformance);
+    Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then(async (updatedPerformance) => {
+
         // Check if performance is a record, save it in that case
-        manageRecord(performance);
+        await manageRecord(updatedPerformance)
+
+        res.send(updatedPerformance);
+        
     }).catch((err) => {
         res.status(409).send(err)
     })

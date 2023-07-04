@@ -55,7 +55,6 @@ describe('POST /performances', function() {
                 position: [position1.id, position2.id],
                 startingPressure: pressure.id,
                 reactionTime: 0.230,
-                mention: ['PB', 'MR']
             })
             .expect(201)
             .expect('Content-Type', /json/);
@@ -66,7 +65,6 @@ describe('POST /performances', function() {
         expect(res.body.position).toEqual([position1.id, position2.id]);
         expect(res.body.startingPressure).toEqual(pressure.id);
         expect(res.body.reactionTime).toEqual(0.230);
-        expect(res.body.mention).toEqual(['PB', 'MR']);
     });
 
     it('should not create a performance (invalid body)', async function() {
@@ -79,8 +77,7 @@ describe('POST /performances', function() {
                 result: "2023-05-32T22:00:14.115Z",
                 position: ['abc', 'abc'],
                 startingPressure: 'abc',
-                reactionTime: -230,
-                mention: ['PW', 'MW']
+                reactionTime: -230
             })
             .expect(409)
             .expect('Content-Type', /json/);
@@ -130,8 +127,8 @@ describe('GET /performances', function() {
 
         // Create performances for retrieving tests.
         [ performance1, performance2 ] = await Promise.all([
-            Performance.create({athlete: athlete1.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure1.id, reactionTime: 0.230, mention: ['PB', 'MR']}),
-            Performance.create({athlete: athlete2.id, race: race.id, lane: 3, result: "2023-05-05T00:00:14.615Z", startingPressure: pressure2.id, reactionTime: 0.278, mention: ['PB']})
+            Performance.create({athlete: athlete1.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure1.id, reactionTime: 0.230}),
+            Performance.create({athlete: athlete2.id, race: race.id, lane: 3, result: "2023-05-05T00:00:14.615Z", startingPressure: pressure2.id, reactionTime: 0.278})
         ])
     });
 
@@ -149,7 +146,6 @@ describe('GET /performances', function() {
             expect.objectContaining({ athlete: athlete1.id, race: race.id, time: pressure1.time, pressure: pressure1.pressure})
         );
         expect(res.body[0].reactionTime).toEqual(0.230);
-        expect(res.body[0].mention).toEqual(['PB', 'MR']);
 
         expect(res.body[1].athlete.id).toEqual(athlete2.id);
         expect(res.body[1].race.id).toEqual(race.id);
@@ -159,7 +155,6 @@ describe('GET /performances', function() {
             expect.objectContaining({ athlete: athlete2.id, race: race.id, time: pressure2.time, pressure: pressure2.pressure})
         );
         expect(res.body[1].reactionTime).toEqual(0.278);
-        expect(res.body[1].mention).toEqual(['PB']);
         
 
     });
@@ -177,7 +172,6 @@ describe('GET /performances', function() {
             expect.objectContaining({ athlete: athlete1.id, race: race.id, time: pressure1.time, pressure: pressure1.pressure})
         );
         expect(res.body[0].reactionTime).toEqual(0.230);
-        expect(res.body[0].mention).toEqual(['PB', 'MR']);
     });
 
     it('should not get a specific performance', async function() {
@@ -222,7 +216,7 @@ describe('PUT /performances', function() {
         ]);
 
         // Create performance for updating tests.
-        performance = await Performance.create({athlete: athlete1.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure1.id, reactionTime: 0.230, mention: ['PB', 'MR']})
+        performance = await Performance.create({athlete: athlete1.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure1.id, reactionTime: 0.230})
     });
 
     it('should modify a performance', async function() {
@@ -234,8 +228,7 @@ describe('PUT /performances', function() {
                 lane: 3,
                 result: "2023-05-05T00:00:14.615Z",
                 startingPressure: pressure2.id,
-                reactionTime: 0.278,
-                mention: ['PB']
+                reactionTime: 0.278
             })
             .expect(200)
             .expect('Content-Type', /json/)
@@ -245,7 +238,6 @@ describe('PUT /performances', function() {
         expect(res.body.result).toEqual('14.615');
         expect(res.body.startingPressure).toEqual(pressure2.id);
         expect(res.body.reactionTime).toEqual(0.278);
-        expect(res.body.mention).toEqual(['PB']);
     });
 
     it('should not modify a performance', async function() {
@@ -257,8 +249,7 @@ describe('PUT /performances', function() {
                 lane: 50,
                 result: "2023-05-032T00:00:14.615Z",
                 startingPressure: 'abc',
-                reactionTime: 10000,
-                mention: ['PW']
+                reactionTime: 10000
             })
             .expect(409)
             .expect('Content-Type', /json/)
@@ -293,7 +284,7 @@ describe('DELETE /performances', function() {
         pressure = await Pressure.create({athlete: athlete.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]});
 
         // Create performance for updating tests.
-        performance = await Performance.create({athlete: athlete.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure.id, reactionTime: 0.230, mention: ['PB', 'MR']})
+        performance = await Performance.create({athlete: athlete.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure.id, reactionTime: 0.230})
         performanceId = performance.id;
         const res = await supertest(app)
             .delete('/performances/' + performance.id)

@@ -19,13 +19,13 @@ describe('POST /athletes', function() {
         discipline2 = await Discipline.create({type: 'relay', distance: 100, gender: 'men'})
     });
 
-    it('should create a athlete', async function() {
+    it('should create a athlete and format lastname, firstname and dateofbirth', async function() {
         const res = await supertest(app)
             .post('/athletes')
             .send({
-                lastName: 'Blake',
-                firstName: 'Yohan',
-                dateOfBirth: '1989-12-26T00:00:00Z',
+                lastName: 'blake',
+                firstName: 'yohan',
+                dateOfBirth: '1989-12-26',
                 gender: 'men',
                 nationality: country.id,
                 discipline: [discipline1.id, discipline2.id]
@@ -41,13 +41,13 @@ describe('POST /athletes', function() {
         expect(res.body.discipline[1]).toEqual(discipline2.id);
     });
 
-    it('should not create a athlete (invalid body)', async function() {
+    it('should not create a athlete (invalid body lastname)', async function() {
         const res = await supertest(app)
             .post('/athletes')
             .send({
                 lastName: 'B',
                 firstName: '',
-                dateOfBirth: '1989-13-32T00:00:00Z',
+                dateOfBirth: 'date',
                 gender: 'dnk',
                 nationality: discipline1.id,
                 discipline: [country.id, discipline2.id]
@@ -55,6 +55,7 @@ describe('POST /athletes', function() {
             .expect(409)
             .expect('Content-Type', /json/);
     });
+
 
     it('should not create a athlete (empty body)', async function() {
         const res = await supertest(app)
@@ -240,6 +241,6 @@ describe('DELETE /athletes', function() {
 beforeEach(cleanUpDatabase);
 
 afterAll(async () => {
-    await cleanUpDatabase()
+    await cleanUpDatabase();
     await mongoose.disconnect();
 });

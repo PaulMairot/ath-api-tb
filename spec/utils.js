@@ -44,9 +44,6 @@ export function formatTimeRace(time) {
 export async function manageRecord(performance) {
   if (performance instanceof Performance) {
 
-    // Bypass result getter
-    let result = new Date(performance.get('result', null, { getters: false }));
-
     performance.mention.forEach(async mention => {
       
       let record = null;
@@ -60,39 +57,46 @@ export async function manageRecord(performance) {
         case "MR" :
         case "DLR": {
           record = await Record.findOne({ mention: mention }).exec();
+          createUpdateRecord(record, performance, mention);
           break;
         }
         case "NR" : {
           record = await Record.findOne({ mention: mention, country: performance.athlete.nationality}).exec();
+          createUpdateRecord(record, performance, mention)
           break;
         }
         case "PB" : {
           record = await Record.findOne({ mention: mention, athlete: performance.athlete}).exec();
+          createUpdateRecord(record, performance, mention)
           break;
         } 
         default:
-          break;
+          return;
       }
-
-      if (record == null) {
-        // Create new record
-        const newRecord = new Record({ athlete: performance.athlete.id, race: performance.race.id, discipline: performance.race.discipline.id, country: performance.athlete.nationality.id, performance: performance.id, result: result, mention: mention});
-        await newRecord.save();
-      } else {
-        // Check if beaten
-        if (compareDesc(result, new Date(record.result))) {
-          // Update record
-          Record.findByIdAndUpdate(record.id, { athlete: performance.athlete.id, race: performance.race.id, discipline: performance.race.discipline.id, country: performance.athlete.nationality.id, performance: performance.id, result: result, mention: mention}).exec();
-        } 
-      } 
     });
-
   }
-  
+}
+
+async function createUpdateRecord(record, performance, mention) {
+  let result = new Date(await performance.get('result', null, { getters: false }));
+  let race = await Race.findById(performance.race).populate('discipline');
+  let athlete = await Athlete.find().populate('nationality');
+
+  if (record == null) {
+    // Create new record
+    const newRecord = new Record({ athlete: performance.athlete.id, race: performance.race.id, discipline: race.discipline.id, country: athlete.nationality, performance: performance.id, result: result, mention: mention});
+    await newRecord.save();
+  } else {
+    // Check if beaten
+    if (compareDesc(result, new Date(record.result))) {
+      // Update record
+      await Record.findByIdAndUpdate(record.id, { athlete: performance.athlete.id, race: performance.race.id, discipline: race.discipline.id, country: athlete.nationality, performance: performance.id, result: result, mention: mention}).exec();
+    } 
+  } 
 }
 
 
-export const cleanUpDatabase = async function() {
+export async function cleanUpDatabase() {
   await Promise.all([
     Athlete.deleteMany(),
     Country.deleteMany(),

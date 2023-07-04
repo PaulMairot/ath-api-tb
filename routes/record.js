@@ -139,15 +139,13 @@ router.get("/:id", function (req, res, next) {
  */
 router.post("/", function (req, res, next) {
     const newRecord = new Record(req.body);
-    console.log(newRecord);
-    next();
-    /*
+    
     newRecord.save().then((savedRecord) => {
         res.status(201).send(savedRecord);
     }).catch((err) => {
         res.status(409).send(err);
     });
-    */
+    
 });
 
 

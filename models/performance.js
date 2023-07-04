@@ -2,6 +2,8 @@ import mongoose from 'mongoose';
 import { format, getHours, getMinutes } from 'date-fns'
 import { transformJson } from '../spec/utils.js';
 
+import { manageRecord } from '../spec/utils.js';
+
 const Schema = mongoose.Schema;
 
 const performanceSchema = new Schema({
