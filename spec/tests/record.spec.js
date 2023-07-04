@@ -21,13 +21,13 @@ describe('POST /records', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
         meeting = await Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country.id});
 
-        // Create athletes for the race and performance.
+        // Create athlete for the race and performance.
         athlete = await Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]});
 
         // Create a race for the performance
@@ -99,13 +99,13 @@ describe('GET /records', function() {
          // Create a country for the meeting.
          country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-         // Create a discipline for the meeting and athletes.
+         // Create a discipline for the race and athletes.
          discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
  
          // Create a meeting for the race.
          meeting = await Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country.id});
  
-        // Create athletes for the race and performance.
+        // Create athletes for the race and performances.
         [ athlete1, athlete2 ] = await Promise.all([
             Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
@@ -165,6 +165,14 @@ describe('GET /records', function() {
         expect(res.body[0].mention).toEqual(performance2.mention[0]);
     });
 
+    it('should limit returned records to one element', async function() {
+        const res = await supertest(app)
+            .get('/records?limit=1')
+            .expect(200)
+            .expect('Content-Type', /json/)
+        expect(res.body).toHaveLength(1);
+    });
+
     it('should not get a specific record', async function() {
         const res = await supertest(app)
             .get('/records?mention=PW')
@@ -186,7 +194,7 @@ describe('PUT /records', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
  
         // Create a meeting for the race.
@@ -198,7 +206,7 @@ describe('PUT /records', function() {
         // Create a race for the performance
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '2023-05-05T19:16:00.000Z', state: 'finished', discipline: discipline.id, athletes: [athlete.id]});
 
-        // Create performances for record.
+        // Create a performance for record.
         performance = await Performance.create({athlete: athlete.id, race: race.id, result: "2023-05-05T00:00:14.115Z", mention: ['MR']});
 
         // Create records for updating tests.
@@ -250,7 +258,7 @@ describe('DELETE /records', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
  
         // Create a meeting for the race.
@@ -262,10 +270,10 @@ describe('DELETE /records', function() {
         // Create a race for the performance
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '2023-05-05T19:16:00.000Z', state: 'finished', discipline: discipline.id, athletes: [athlete.id]});
 
-        // Create performances for record.
+        // Create a performance for record.
         performance = await Performance.create({athlete: athlete.id, race: race.id, result: "2023-05-05T00:00:14.115Z", mention: ['MR']});
 
-        // Create records for updating tests.
+        // Create records for deleting test.
         record = await Record.create({athlete: athlete.id, race: race.id, discipline: discipline.id, country: country.id, performance: performance.id, result: await performance.get('result', null, { getters: false }), mention: performance.mention[0]});
         recordId = performance.id;
         const res = await supertest(app)

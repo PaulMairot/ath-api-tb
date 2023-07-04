@@ -55,7 +55,7 @@ describe('GET /disciplines', function() {
     let discipline1;
     let discipline2;
     beforeEach(async function() {
-        // Create 2 disciplines before retrieving the list.
+        // Create disciplines before retrieving the list.
         [ discipline1, discipline2 ] = await Promise.all([
             Discipline.create({type: 'hurdles', distance: 110, gender: 'women'}),
             Discipline.create({type: 'none', distance: 100, gender: 'men'})
@@ -81,9 +81,17 @@ describe('GET /disciplines', function() {
             .get('/disciplines?type=hurdles&distance=110&gender=women')
             .expect(200)
             .expect('Content-Type', /json/)
-            expect(res.body[0].type).toEqual('hurdles');
-            expect(res.body[0].distance).toEqual(110);
-            expect(res.body[0].gender).toEqual('women');
+        expect(res.body[0].type).toEqual('hurdles');
+        expect(res.body[0].distance).toEqual(110);
+        expect(res.body[0].gender).toEqual('women');
+    });
+
+    it('should limit returned disciplines to one element', async function() {
+        const res = await supertest(app)
+            .get('/disciplines?limit=1')
+            .expect(200)
+            .expect('Content-Type', /json/)
+        expect(res.body).toHaveLength(1);
     });
 
     it('should not get a specific discipline', async function() {
@@ -103,7 +111,7 @@ describe('PUT /disciplines', function() {
 
     let discipline;
     beforeEach(async function() {
-        // Create a discipline before modifying.
+        // Create a discipline for modifying tests.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'})
     });
 
@@ -141,10 +149,10 @@ describe('PUT /disciplines', function() {
 
 describe('DELETE /disciplines', function() {
 
-    let discipline;
-    let disciplineId
+    let discipline, disciplineId
 
     it('should delete a discipline', async function() {
+        // Create discipline for deleting test.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'})
         disciplineId = discipline.id;
         const res = await supertest(app)

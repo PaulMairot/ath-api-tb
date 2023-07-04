@@ -22,7 +22,7 @@ describe('POST /performances', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -31,13 +31,13 @@ describe('POST /performances', function() {
         // Create athletes for the race and performance.
         athlete = await Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]});
 
-        // Create a race for the performance
+        // Create a race for the performance.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '2023-05-05T19:16:00.000Z', state: 'finished', discipline: discipline.id, athletes: [athlete.id]})
 
         // Create pressure for performance.
         pressure = await Pressure.create({athlete: athlete.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]});
 
-        // Create positions for performance
+        // Create positions for the performance.
         [ position1, position2 ] = await Promise.all([
             Position.create({athlete: athlete.id, race: race.id, rank: 3, runnedDistance: 30, gapToLeader: 1.8, speed: 26.6, time: "2023-05-05T00:00:09.716Z", coordinates: [80,232]}),
             Position.create({athlete: athlete.id, race: race.id, rank: 3, runnedDistance: 34, gapToLeader: 1.9, speed: 25.9, time: "2023-05-05T00:00:10.132Z", coordinates: [84,231]})
@@ -104,7 +104,7 @@ describe('GET /performances', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -116,10 +116,10 @@ describe('GET /performances', function() {
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
         ]);
 
-        // Create a race for the performance
+        // Create a race for performances.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '2023-05-05T19:16:00.000Z', state: 'finished', discipline: discipline.id, athletes: [athlete1.id, athlete2]});
 
-        // Create pressure for performance.
+        // Create pressures for performances.
         [ pressure1, pressure2 ] = await Promise.all([
             Pressure.create({athlete: athlete1.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]}),
             Pressure.create({athlete: athlete2.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [158,169,173,186,198,212]})
@@ -194,7 +194,7 @@ describe('PUT /performances', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -209,7 +209,7 @@ describe('PUT /performances', function() {
         // Create a race for the performance
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '2023-05-05T19:16:00.000Z', state: 'finished', discipline: discipline.id, athletes: [athlete1.id, athlete2]});
 
-        // Create pressure for performance.
+        // Create pressures for the performance.
         [ pressure1, pressure2 ] = await Promise.all([
             Pressure.create({athlete: athlete1.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]}),
             Pressure.create({athlete: athlete2.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [158,169,173,186,198,212]})
@@ -268,7 +268,7 @@ describe('DELETE /performances', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -283,7 +283,7 @@ describe('DELETE /performances', function() {
         // Create pressure for performance.
         pressure = await Pressure.create({athlete: athlete.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]});
 
-        // Create performance for updating tests.
+        // Create performance for deleting test.
         performance = await Performance.create({athlete: athlete.id, race: race.id, lane: 2, result: "2023-05-05T00:00:14.115Z", startingPressure: pressure.id, reactionTime: 0.230})
         performanceId = performance.id;
         const res = await supertest(app)

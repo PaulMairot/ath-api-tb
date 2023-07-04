@@ -58,7 +58,7 @@ describe('GET /countries', function() {
     let country1;
     let country2;
     beforeEach(async function() {
-        // Create 2 countries before retrieving the list.
+        // Create countries before retrieving the list.
         [ country1, country2 ] = await Promise.all([
             Country.create({alpha2: 'CH', alpha3: 'CHE', noc: 'SUI', name: 'Switzerland'}),
             Country.create({alpha2: 'BV', alpha3: 'BVA', noc: 'BVA', name: 'Bartovia'})
@@ -109,7 +109,7 @@ describe('PUT /countries', function() {
 
     let country;
     beforeEach(async function() {
-        // Create a country before modifying.
+        // Create a country for modifying tests.
         country = await Country.create({alpha2: 'BV', alpha3: 'BVA', noc: 'BVA', name: 'Bartovia'});
     });
 
@@ -154,6 +154,7 @@ describe('DELETE /countries', function() {
     let countryId
 
     it('should delete a country', async function() {
+        // Create country for deleting test.
         country = await Country.create({alpha2: 'BV', alpha3: 'BVA', noc: 'BVA', name: 'Bartovia'});
         countryId = country.id;
         const res = await supertest(app)

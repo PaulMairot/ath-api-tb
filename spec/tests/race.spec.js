@@ -21,7 +21,7 @@ describe('POST /races', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -92,13 +92,13 @@ describe('GET /races', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
         meeting = await Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country.id});
 
-        // Create athletes for the race.
+        // Create athletes for races.
         [ athlete1, athlete2 ] = await Promise.all([
             Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
@@ -195,7 +195,7 @@ describe('PUT /races', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -207,7 +207,7 @@ describe('PUT /races', function() {
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
         ]);
 
-        // Create a race before modifying.
+        // Create a race for modifying test.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete1.id, athlete2.id]})
     });
 
@@ -257,7 +257,7 @@ describe('DELETE /races', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -269,7 +269,7 @@ describe('DELETE /races', function() {
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
         ]);
 
-        // Create a race before modifying.
+        // Create a race for deleting test.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete1.id, athlete2.id]})
         raceId = race.id;
 

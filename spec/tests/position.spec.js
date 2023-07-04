@@ -21,7 +21,7 @@ describe('POST /positions', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -30,7 +30,7 @@ describe('POST /positions', function() {
         // Create an athlete for the race and position.
         athlete = await Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]});
 
-        // Create a race for the position
+        // Create a race for the position.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete.id]})
     });
 
@@ -97,13 +97,13 @@ describe('GET /positions', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
         meeting = await Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country.id});
 
-        // Create an athlete for the race and position.
+        // Create an athlete for the race and positions.
         athlete = await Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]});
 
         // Create a race for the position
@@ -177,7 +177,7 @@ describe('PUT /positions', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -186,10 +186,10 @@ describe('PUT /positions', function() {
         // Create an athlete for the race and position.
         athlete = await Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]});
 
-        // Create a race for the position
+        // Create a race for the position.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete.id]});
 
-        // Create positions to modify
+        // Create position for modifying tests.
         position = await Position.create({athlete: athlete.id, race: race.id, rank: 3, runnedDistance: 30, gapToLeader: 1.8, speed: 26.6, time: "2023-05-05T00:00:09.716Z", coordinates: [80,232]})
     });
 
@@ -244,7 +244,7 @@ describe('DELETE /positions', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -253,10 +253,10 @@ describe('DELETE /positions', function() {
         // Create an athlete for the race and position.
         athlete = await Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]});
 
-        // Create a race for the position
+        // Create a race for the position.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete.id]});
 
-        // Create positions to modify
+        // Create positions for deleting test.
         position = await Position.create({athlete: athlete.id, race: race.id, rank: 3, runnedDistance: 30, gapToLeader: 1.8, speed: 26.6, time: "2023-05-05T00:00:09.716Z", coordinates: [80,232]})
         positionId = position.id;
         

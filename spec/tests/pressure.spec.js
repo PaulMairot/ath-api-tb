@@ -21,7 +21,7 @@ describe('POST /pressures', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -88,19 +88,19 @@ describe('GET /pressures', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
         meeting = await Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country.id});
 
-        // Create athletes for the race and pressure.
+        // Create athletes for the race and pressures.
         [ athlete1, athlete2 ] = await Promise.all([
             Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
         ]);
 
-        // Create a race for the pressure
+        // Create a race for the pressure.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete1.id, athlete2.id]});
 
         // Create pressures for retrieving tests.
@@ -161,7 +161,7 @@ describe('PUT /pressures', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -176,7 +176,7 @@ describe('PUT /pressures', function() {
         // Create a race for the pressure
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete1.id, athlete2.id]});
 
-        // Create pressure to modify.
+        // Create pressure for modifying tests.
         pressure = await Pressure.create({athlete: athlete1.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]});
     });
 
@@ -223,7 +223,7 @@ describe('DELETE /pressures', function() {
         // Create a country for the meeting.
         country = await Country.create({alpha2: 'JM', alpha3: 'JAM', noc: 'JAM', name: 'Jamaica'});
 
-        // Create a discipline for the meeting and athletes.
+        // Create a discipline for the race and athletes.
         discipline = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
 
         // Create a meeting for the race.
@@ -235,10 +235,10 @@ describe('DELETE /pressures', function() {
             Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline.id]}),
         ]);
 
-        // Create a race for the pressure
+        // Create a race for the pressure.
         race = await Race.create({meeting: meeting.id, plannedStartTime: '2023-05-05T19:15:00.000Z', realStartTime: '', state: 'pending', discipline: discipline.id, athletes: [athlete1.id, athlete2.id]});
 
-        // Create pressure to modify.
+        // Create pressure for deleting test.
         pressure = await Pressure.create({athlete: athlete1.id, race: race.id, time: [-2,0,2,4,6,8], pressure: [345,381,432,487,546,610]});
         pressureId = pressure.id;
         const res = await supertest(app)

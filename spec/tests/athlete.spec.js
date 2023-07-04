@@ -166,7 +166,7 @@ describe('PUT /athletes', function() {
         discipline1 = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
         discipline2 = await Discipline.create({type: 'relay', distance: 100, gender: 'men'});
 
-        // Create a athlete before modifying.
+        // Create a athlete for modifying test.
         athlete = await Athlete.create({lastName: 'Bolt', firstName: 'Usain', dateOfBirth: '1986-08-21T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline1.id, discipline2.id]})
     });
 
@@ -222,6 +222,7 @@ describe('DELETE /athletes', function() {
         discipline1 = await Discipline.create({type: 'none', distance: 100, gender: 'men'});
         discipline2 = await Discipline.create({type: 'relay', distance: 100, gender: 'men'});
 
+        // Create athlete for deleting test.
         athlete = await Athlete.create({lastName: 'Blake', firstName: 'Yohan', dateOfBirth: '1989-12-26T00:00:00Z', gender: 'men', nationality: country.id, discipline: [discipline1.id, discipline2.id]});
         athleteId = athlete.id;
         const res = await supertest(app)

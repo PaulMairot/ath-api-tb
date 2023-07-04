@@ -47,11 +47,15 @@ const router = express.Router();
  */
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
+    delete filters.athlete;
 
     if (filters.plannedStartTime) { filters.plannedStartTime = new Date(filters.plannedStartTime).toISOString() }
     if(filters.state) { filters.state = filters.state.toLowerCase() };
 
-    Race.find({...filters})
+    Race.find({
+        ...filters,
+        ...req.query.athlete ? athletes: req.query.athlete
+    })
         .populate(['meeting', 'discipline', 'athletes', 'performances'])
         .sort({plannedStartTime: 1})
         .then((races) => {

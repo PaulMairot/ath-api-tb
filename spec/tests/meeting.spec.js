@@ -75,7 +75,7 @@ describe('GET /meetings', function() {
         country1 = await Country.create({alpha2: 'QA', alpha3: 'QAT', noc: 'QAT', name: 'Qat'});
         country2 = await Country.create({alpha2: 'MA', alpha3: 'MAR', noc: 'MAR', name: 'Morocco'});
 
-        // Create 2 meetings before retrieving the list.
+        // Create meetings before retrieving the list.
         [ meeting1, meeting2 ] = await Promise.all([
             Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country1.id}),
             Meeting.create({name: 'Diamond League', startDate: '2023-05-28T00:00:00Z', endDate: '2023-05-28T00:00:00Z', location: 'Prince Moulay Abdellah Stadium', city: 'Rabat', country: country2.id}),
@@ -123,6 +123,14 @@ describe('GET /meetings', function() {
         );
     });
 
+    it('should limit returned meetings to one element', async function() {
+        const res = await supertest(app)
+            .get('/meetings?limit=1')
+            .expect(200)
+            .expect('Content-Type', /json/)
+        expect(res.body).toHaveLength(1);
+    });
+
     it('should not get a specific meeting', async function() {
         const res = await supertest(app)
             .get('/meetings?name=World Championship')
@@ -141,10 +149,10 @@ describe('PUT /meetings', function() {
     let meeting;
 
     beforeEach(async function() {
-        // Create countries for the meetings.
+        // Create a country for the meeting.
         country = await Country.create({alpha2: 'MA', alpha3: 'MAR', noc: 'MAR', name: 'Morocco'});
 
-        // Create a meeting before modifying.
+        // Create a meeting before modifying test.
         meeting = await Meeting.create({name: 'Diamond League', startDate: '2023-05-05T00:00:00Z', endDate: '2023-05-05T00:00:00Z', location: 'Suhaim Bin Hamad Stadium', city: 'Doha', country: country.id})
     });
 
