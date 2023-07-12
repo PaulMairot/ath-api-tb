@@ -53,12 +53,14 @@ router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.limit;
 
-    Record.find({...filters}).limit(req.query.limit).then((records) => {
-        if (records.length === 0) {
-            res.status(404).send("No record found.")
-        } else {
-            res.send(records);
-        }
+    Record.find({...filters})
+        .limit(req.query.limit)
+        .populate(['athlete', 'race', 'discipline', 'country', 'performance']).then((records) => {
+            if (records.length === 0) {
+                res.status(404).send("No record found.")
+            } else {
+                res.send(records);
+            }
     }).catch((err) => {
         return next(err);
     });
@@ -93,7 +95,7 @@ router.get("/", function (req, res, next) {
  * @apiError RecordNotFound The <code>id</code> of the Record was not found.
  */
 router.get("/:id", function (req, res, next) {
-    Record.findById(req.params.id).then((record) => {
+    Record.findById(req.params.id).populate(['athlete', 'race', 'discipline', 'country', 'performance']).then((record) => {
         if (record == null) {
             res.status(404).send("No record found with ID :" + req.params.id + ".")
         } else {

@@ -26,7 +26,7 @@ const performanceSchema = new Schema({
         type: Date,
         get: formatResult
     },
-    position: [{ 
+    positions: [{ 
         type : mongoose.Schema.Types.ObjectId, 
         ref: 'Position' 
     }],

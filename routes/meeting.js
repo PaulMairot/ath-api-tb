@@ -171,7 +171,10 @@ router.get("/:id", function (req, res, next) {
 router.post("/", function (req, res, next) {
     const newMeeting = new Meeting(req.body);
 
-    newMeeting.save().then((savedMeeting) => {
+    newMeeting.save().then(async (savedMeeting) => {
+         // WS new meeting
+         broadcastData({ ressource: 'meeting', type: 'new', data: await savedMeeting.populate(['country', 'races']) });
+
         res.status(201).send(savedMeeting);
     }).catch((err) => {
         res.status(409).send(err);
@@ -223,7 +226,10 @@ router.post("/", function (req, res, next) {
  * 
  */
 router.put("/:id", function (req, res, next) {
-    Meeting.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).populate(['country', 'races']).then((updatedMeeting) => {
+    Meeting.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).populate(['country', 'races']).then(async (updatedMeeting) => {
+        // WS updated meeting
+        broadcastData({ ressource: 'meeting', type: 'updated', data: await updatedMeeting.populate(['country', 'races']) });
+
         res.send(updatedMeeting);
     }).catch((err) => {
         res.status(409).send(err)

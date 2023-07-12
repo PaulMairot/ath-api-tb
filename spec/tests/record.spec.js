@@ -132,7 +132,9 @@ describe('GET /records', function() {
             .get('/records')
             .expect(200)
             .expect('Content-Type', /json/)
-        expect(res.body[0].athlete).toEqual(athlete1.id);
+        expect(res.body[0].athlete).toMatchObject( 
+            { lastName: athlete1.lastName, firstName: athlete1.firstName, dateOfBirth: athlete1.dateOfBirth, gender: athlete1.gender, nationality: athlete1.nationality, discipline: athlete1.discipline, id: athlete1.id}
+        );
         expect(res.body[0].race).toEqual(race.id);
         expect(res.body[0].discipline).toEqual(discipline.id);
         expect(res.body[0].country).toEqual(country.id);
@@ -140,7 +142,9 @@ describe('GET /records', function() {
         expect(res.body[0].result).toEqual((await performance1.get('result', null, { getters: false })).toISOString());
         expect(res.body[0].mention).toEqual(performance1.mention[0]);
 
-        expect(res.body[1].athlete).toEqual(athlete2.id);
+        expect(res.body[1].athlete).toEqual( 
+            expect.toMatchObject({ lastName: athlete2.lastName, firstName: athlete2.firstName, dateOfBirth: athlete2.dateOfBirth, gender: athlete2.gender, nationality: athlete2.nationality, discipline: athlete2.discipline, id: athlete2.id})    
+        );
         expect(res.body[1].race).toEqual(race.id);
         expect(res.body[1].discipline).toEqual(discipline.id);
         expect(res.body[1].country).toEqual(country.id);
@@ -156,7 +160,9 @@ describe('GET /records', function() {
             .get(`/records?athlete=${athlete2.id}&mention=${performance2.mention[0]}`)
             .expect(200)
             .expect('Content-Type', /json/)
-        expect(res.body[0].athlete).toEqual(athlete2.id);
+        expect(res.body[0].athlete).toEqual( 
+            expect.objectContaining({ lastName, firstName, dateOfBirth, gender, nationality, discipline})
+        );
         expect(res.body[0].race).toEqual(race.id);
         expect(res.body[0].discipline).toEqual(discipline.id);
         expect(res.body[0].country).toEqual(country.id);

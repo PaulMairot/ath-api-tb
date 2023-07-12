@@ -52,7 +52,7 @@ describe('POST /performances', function() {
                 race: race.id,
                 lane: 2,
                 result: "2023-05-05T00:00:14.115Z",
-                position: [position1.id, position2.id],
+                positions: [position1.id, position2.id],
                 startingPressure: pressure.id,
                 reactionTime: 0.230,
             })
@@ -62,7 +62,7 @@ describe('POST /performances', function() {
         expect(res.body.race).toEqual(race.id);
         expect(res.body.lane).toEqual(2);
         expect(res.body.result).toEqual('14.115');
-        expect(res.body.position).toEqual([position1.id, position2.id]);
+        expect(res.body.positions).toEqual([position1.id, position2.id]);
         expect(res.body.startingPressure).toEqual(pressure.id);
         expect(res.body.reactionTime).toEqual(0.230);
     });
@@ -75,7 +75,7 @@ describe('POST /performances', function() {
                 race: 'abc',
                 lane: -2,
                 result: "2023-05-32T22:00:14.115Z",
-                position: ['abc', 'abc'],
+                positions: ['abc', 'abc'],
                 startingPressure: 'abc',
                 reactionTime: -230
             })

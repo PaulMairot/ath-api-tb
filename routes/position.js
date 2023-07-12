@@ -1,5 +1,6 @@
 import express from "express";
 import Position from "../models/position.js";
+import Performance from "../models/performance.js";
 
 const router = express.Router();
 
@@ -101,7 +102,12 @@ router.get("/", function (req, res, next) {
 router.post("/", function (req, res, next) {
     const newPosition = new Position(req.body);
 
-    newPosition.save().then((savedPosition) => {
+    newPosition.save().then(async (savedPosition) => {
+        // Add performance to race performances array
+        await Performance.findOneAndUpdate(
+            { race: req.body.race, athlete: req.body.athlete }, { $push: { postions: savedPerformance._id }}
+        )
+
         res.status(201).send(savedPosition);
     }).catch((err) => {
         res.status(409).send(err);

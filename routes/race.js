@@ -1,6 +1,7 @@
 import express from "express";
 import Race from "../models/race.js";
 import Meeting from "../models/meeting.js";
+import { broadcastData } from "../ws.js";
 
 const router = express.Router();
 
@@ -110,7 +111,7 @@ router.get("/", function (req, res, next) {
 router.get("/:id", function (req, res, next) {
     Race.findById(req.params.id)
         .populate(['meeting', 'discipline', 'athletes'])
-        .then((race) => {
+        .then(async (race) => {
             if (race == null) {
                 res.status(404).send("No race found with ID :" + req.params.id + ".")
             } else {
@@ -175,6 +176,9 @@ router.post("/", function (req, res, next) {
         await Meeting.findOneAndUpdate(
             { _id: req.body.meeting }, { $push: { races: savedRace._id }}
         )
+        
+        // WS new race
+        broadcastData({ ressource: 'race', type: 'new', data: await savedRace.populate(['meeting', 'discipline', 'athletes']) });
 
         res.status(201).send(savedRace);
     }).catch((err) => {
@@ -234,7 +238,10 @@ router.post("/", function (req, res, next) {
  * 
  */
 router.put("/:id", function (req, res, next) {
-    Race.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then((updatedRace) => {
+    Race.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then(async (updatedRace) => {
+        // WS updated race
+        broadcastData({ ressource: 'race', type: 'updated', data: await updatedRace.populate(['meeting', 'discipline', 'athletes']) });
+
         res.send(updatedRace);
     }).catch((err) => {
         res.status(409).send(err)

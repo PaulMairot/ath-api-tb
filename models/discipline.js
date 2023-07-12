@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import { transformJson } from '../spec/utils.js';
+import Athlete from './athlete.js';
+import Race from './race.js';
+import Record from './record.js';
 
 const Schema = mongoose.Schema;
 

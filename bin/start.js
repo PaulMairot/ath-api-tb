@@ -7,6 +7,7 @@
 import app from "../app.js";
 import createDebugger from "debug";
 import http from "http";
+import { createWebSocketServer } from '../ws.js';
 
 const debug = createDebugger('ath-api-tb:server')
 /**
@@ -21,6 +22,8 @@ app.set("port", port);
  */
 
 const server = http.createServer(app);
+
+createWebSocketServer(server);
 
 /**
  * Listen on provided port, on all network interfaces.

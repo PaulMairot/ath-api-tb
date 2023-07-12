@@ -42,7 +42,7 @@ const router = express.Router();
  *          "race": {...},
  *          "lane": 4,
  *          "result": "14.115",
- *          "position": [{...}, {...}],
+ *          "positions": [{...}, {...}],
  *          "startingPressure": {...},
  *          "reactionTime": 132,
  *          "mention" : ["NB"]
@@ -66,7 +66,7 @@ router.get("/", function (req, res, next) {
     .populate([
         {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
         {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
-        {path: 'position'},
+        {path: 'positions'},
         {path: 'startingPressure'}
     ])
         .sort({lane: 1}).then((performances) => {
@@ -91,7 +91,7 @@ router.get("/", function (req, res, next) {
  * @apiSuccess {Object} athlete                 Athlete related to performance.
  * @apiSuccess {Object} race                    Race related to performance.
  * @apiSuccess {Number} Lane                    Lane of the athlete for the performance.
- * @apiSuccess {Array}  position                Array of all mesured position of athlete during the performance.
+ * @apiSuccess {Array}  position  s              Array of all mesured position of athlete during the performance.
  * @apiSuccess {Object} startingPressure        Starting pressure of the performance.
  * @apiSuccess {Number} reactionTime            Reaction time of the athlete for the performance.
  * @apiSuccess {Array}  mention                 Mention(s) obtained by the athlete for the performance.
@@ -104,7 +104,7 @@ router.get("/", function (req, res, next) {
  *          "race": {...},
  *          "lane": 4,
  *          "result": "14.115",
- *          "position": [{...}, {...}],
+ *          "positions": [{...}, {...}],
  *          "startingPressure": {...},
  *          "reactionTime": 132,
  *          "mention" : ["NB"]
@@ -113,13 +113,13 @@ router.get("/", function (req, res, next) {
  * 
  * @apiError PerformanceNotFound The <code>id</code> of the Performance was not found.
  */
-//.populate(['athlete', 'race', 'position', 'startingPressure'])
+//.populate(['athlete', 'race', 'positions', 'startingPressure'])
 router.get("/:id", function (req, res, next) {
     Performance.findById(req.params.id)
     .populate([
             {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
             {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
-            {path: 'position'},
+            {path: 'positions'},
             {path: 'startingPressure'}
     ]).then((performance) => {
         if (performance == null) {
@@ -141,7 +141,7 @@ router.get("/:id", function (req, res, next) {
  * @apiBody {Object} athlete                 Athlete related to performance.
  * @apiBody {Object} race                    Race related to performance.
  * @apiBody {Number} [Lane]                    Lane of the athlete for the performance.
- * @apiBody {Array}  [position]                Array of all mesured position of athlete during the performance.
+ * @apiBody {Array}  [positions]                Array of all mesured positions of athlete during the performance.
  * @apiBody {Object} [startingPressure]        Starting pressure of the performance.
  * @apiBody {Number} [reactionTime]            Reaction time of the athlete for the performance.
  * @apiBody {Array}  [mention]                 Mention(s) obtained by the athlete for the performance.
@@ -149,7 +149,7 @@ router.get("/:id", function (req, res, next) {
  * @apiSuccess {Object} athlete                 Athlete related to new performance.
  * @apiSuccess {Object} race                    Race related to new performance.
  * @apiSuccess {Number} Lane                    Lane of the athlete for the new performance.
- * @apiSuccess {Array}  position                Array of all mesured position of athlete during the new performance.
+ * @apiSuccess {Array}  positions                Array of all mesured positions of athlete during the new performance.
  * @apiSuccess {Object} startingPressure        Starting pressure of the new performance.
  * @apiSuccess {Number} reactionTime            Reaction time of the athlete for th new performance.
  * @apiSuccess {Array}  mention                 Mention(s) obtained by the athlete for the new performance.
@@ -162,7 +162,7 @@ router.get("/:id", function (req, res, next) {
  *          "race": {...},
  *          "lane": 4,
  *          "result": "14.115",
- *          "position": [{...}, {...}],
+ *          "positions": [{...}, {...}],
  *          "startingPressure": {...},
  *          "reactionTime": 132,
  *          "mention" : ["NB"]
@@ -172,8 +172,8 @@ router.get("/:id", function (req, res, next) {
  */
 router.post("/", async function (req, res, next) {
 
-    // Auto-fill position with athlete and race IDs
-    if (!req.body.position && isValidObjectId(req.body.athlete) && isValidObjectId(req.body.race)) {
+    // Auto-fill positions with athlete and race IDs
+    if (!req.body.positions && isValidObjectId(req.body.athlete) && isValidObjectId(req.body.race)) {
         await Position.find({athlete: req.body.athlete, race: req.body.race}).then((positions) => {
             if (positions) {
                 req.body.position = positions;
@@ -203,6 +203,17 @@ router.post("/", async function (req, res, next) {
         // Check if performance is a record, save it in that case
         await manageRecord(savedPerformance)
 
+        // WS new performance
+        broadcastData({ ressource: 'performance', 
+                        type: 'new', 
+                        data: await savedPerformance.populate([
+                            {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
+                            {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
+                            {path: 'positions'},
+                            {path: 'startingPressure'}
+                        ]) 
+                    });
+
         res.status(201).send(savedPerformance);
     }).catch((err) => {
         res.status(409).send(err);
@@ -221,7 +232,7 @@ router.post("/", async function (req, res, next) {
  * @apiBody {Object} [athlete]                 ID of athlete related to performance.
  * @apiBody {Object} [race]                    ID of race related to performance.
  * @apiBody {Number} [Lane]                    Lane of the athlete for the performance.
- * @apiBody {Array}  [position]                Array of all mesured position of athlete during the performance.
+ * @apiBody {Array}  [positions]                Array of all mesured positions of athlete during the performance.
  * @apiBody {Object} [startingPressure]        ID of starting pressure of the performance.
  * @apiBody {Number} [reactionTime]            Reaction time of the athlete for the performance.
  * @apiBody {Array}  [mention]                 Mention(s) obtained by the athlete for the performance.
@@ -229,7 +240,7 @@ router.post("/", async function (req, res, next) {
  * @apiSuccess {Object} athlete                 Athlete related to updated performance.
  * @apiSuccess {Object} race                    Race related to updated performance.
  * @apiSuccess {Number} Lane                    Lane of the athlete for the updated performance.
- * @apiSuccess {Array}  position                Array of all mesured position of athlete during the updated performance.
+ * @apiSuccess {Array}  positions                Array of all mesured positions of athlete during the updated performance.
  * @apiSuccess {Object} startingPressure        Starting pressure of the updated performance.
  * @apiSuccess {Number} reactionTime            Reaction time of the athlete for th updated performance.
  * @apiSuccess {Array}  mention                 Mention(s) obtained by the athlete for the updated performance.
@@ -242,7 +253,7 @@ router.post("/", async function (req, res, next) {
  *          "race": {...},
  *          "lane": 4,
  *          "result": "14.115",
- *          "position": [{...}, {...}],
+ *          "positions": [{...}, {...}],
  *          "startingPressure": {...},
  *          "reactionTime": 132,
  *          "mention" : ["NB"]
@@ -259,6 +270,17 @@ router.put("/:id", function (req, res, next) {
 
         // Check if performance is a record, save it in that case
         await manageRecord(updatedPerformance)
+
+        // WS updated performance
+        broadcastData({ ressource: 'performance', 
+                        type: 'updated', 
+                        data: await updatedPerformance.populate([
+                            {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
+                            {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
+                            {path: 'positions'},
+                            {path: 'startingPressure'}
+                        ]) 
+                    });
 
         res.send(updatedPerformance);
         
