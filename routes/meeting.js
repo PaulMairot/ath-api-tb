@@ -1,5 +1,6 @@
 import express from "express";
 import Meeting from "../models/meeting.js";
+import { broadcastData } from "../ws.js";
 
 const router = express.Router();
 
@@ -10,6 +11,7 @@ const router = express.Router();
  * 
  * @apiParam {Number} [limit]       Limit the number of meetings.
  * @apiParam {Date}   [fromDate]    All meetings from specified date.
+ * @apiParam {Date}   [toDate]      All meetings before specified date.
  * @apiParam {Date}   [date]        All meetings at specified date.
  * @apiParam {String} [country]     ID of a country.
  * @apiParam {String} [city]        Name of a city.
@@ -18,6 +20,7 @@ const router = express.Router();
  *     {
  *       "limit": 2,
  *       "fromDate": "2023-05-28",
+ *       "toDate": "2023-05-28",
  *       "date": "2023-05-28",
  *       "country": "07b011c58932564858f9e9f0",
  *       "city": "Doha"
@@ -56,6 +59,7 @@ router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.limit;
     delete filters.fromDate;
+    delete filters.toDate;
     delete filters.date;
 
     if(filters.name) { 
@@ -67,16 +71,24 @@ router.get("/", function (req, res, next) {
     if(filters.city) { filters.city = filters.city.charAt(0).toUpperCase() + filters.city.slice(1).toLowerCase(); };
     
     if(req.query.fromDate) { req.query.fromDate = new Date(req.query.fromDate).toISOString()}
+    if(req.query.toDate) { req.query.toDate = new Date(req.query.toDate).toISOString()}
     if(req.query.date) { req.query.date = new Date(req.query.date).toISOString()}
+
+    // Change sorting based on query
+    let sorting = 1;
+    if (req.query.toDate) {
+        sorting = -1
+    }
 
     Meeting.find({
             ...filters,
             ...req.query.fromDate ? { startDate: { $gte: req.query.fromDate } } : {},
+            ...req.query.toDate ? { startDate: { $lte: req.query.toDate } } : {},
             ...req.query.date ? { startDate: { $gte: req.query.date } } : {},
             ...req.query.date ? { endDate: { $lte: req.query.date } } : {},
         })
         .populate(['country', 'races'])
-        .sort({name: 1}).limit(req.query.limit).then((meetings) => {
+        .sort({startDate: sorting}).limit(req.query.limit).then((meetings) => {
             if (meetings.length === 0) {
                 res.status(404).send("No meeting found.")
             } else {
@@ -170,7 +182,7 @@ router.get("/:id", function (req, res, next) {
  */
 router.post("/", function (req, res, next) {
     const newMeeting = new Meeting(req.body);
-
+    
     newMeeting.save().then(async (savedMeeting) => {
          // WS new meeting
          broadcastData({ ressource: 'meeting', type: 'new', data: await savedMeeting.populate(['country', 'races']) });

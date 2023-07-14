@@ -22,6 +22,11 @@ const performanceSchema = new Schema({
         min: 1,
         max: 10
     },
+    rank: {
+        type: Number,
+        min: 1,
+        max: 30
+    },
     result: {
         type: Date,
         get: formatResult
@@ -54,19 +59,22 @@ const performanceSchema = new Schema({
 });
 
 function formatResult(result) {
-    // Remove timezone offset
-    let time = new Date(result.valueOf() + result.getTimezoneOffset() * 60 * 1000);
+    if (result) {
+        // Remove timezone offset
+        let time = new Date(result.valueOf() + result.getTimezoneOffset() * 60 * 1000);
 
-    // Adjust time format tokens
-    let formatTokens = "HH:mm:ss.SSS";
-    if (getHours(time) == 0) {
-        formatTokens = "mm:ss.SSS";
-    } 
-    if (getHours(time) == 0 && getMinutes(time) == 0) {
-        formatTokens = "ss.SSS";
+        // Adjust time format tokens
+        let formatTokens = "HH:mm:ss.SSS";
+        if (getHours(time) == 0) {
+            formatTokens = "mm:ss.SSS";
+        } 
+        if (getHours(time) == 0 && getMinutes(time) == 0) {
+            formatTokens = "ss.SSS";
+        }
+
+        return format(time, formatTokens);
     }
-
-    return format(time, formatTokens);
+    
 }
 
 performanceSchema.set("toJSON", {

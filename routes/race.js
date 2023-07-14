@@ -48,6 +48,7 @@ const router = express.Router();
  */
 router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
+    delete filters.limit;
     delete filters.athlete;
 
     if (filters.plannedStartTime) { filters.plannedStartTime = new Date(filters.plannedStartTime).toISOString() }
@@ -59,6 +60,7 @@ router.get("/", function (req, res, next) {
     })
         .populate(['meeting', 'discipline', 'athletes', 'performances'])
         .sort({plannedStartTime: 1})
+        .limit(req.query.limit)
         .then((races) => {
             if (races.length === 0) {
                 res.status(404).send("No race found.")
@@ -110,7 +112,12 @@ router.get("/", function (req, res, next) {
  */
 router.get("/:id", function (req, res, next) {
     Race.findById(req.params.id)
-        .populate(['meeting', 'discipline', 'athletes'])
+        .populate([
+            {path: 'athletes', populate : [{path : 'nationality'}, {path : 'discipline'}]},
+            {path: 'performances', populate : [{path : 'athlete', populate : [{path : 'nationality'}]}]},
+            {path: 'meeting'},
+            {path: 'discipline'}
+        ])
         .then(async (race) => {
             if (race == null) {
                 res.status(404).send("No race found with ID :" + req.params.id + ".")

@@ -1,11 +1,13 @@
 import express from "express";
 import mongoose, { isValidObjectId } from "mongoose";
 import { manageRecord } from '../spec/utils.js';
+import { broadcastData } from "../ws.js";
 
 import Performance from "../models/performance.js";
 import Pressure from "../models/pressure.js";
 import Position from "../models/position.js";
 import Race from "../models/race.js";
+import Meeting from "../models/meeting.js";
 
 String.prototype.toObjectId = function() {
     var ObjectId = (mongoose.Types.ObjectId);
@@ -118,13 +120,15 @@ router.get("/:id", function (req, res, next) {
     Performance.findById(req.params.id)
     .populate([
             {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
-            {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
+            {path: 'race'},
             {path: 'positions'},
             {path: 'startingPressure'}
     ]).then((performance) => {
+        
         if (performance == null) {
             res.status(404).send("No performance found with ID :" + req.params.id + ".")
         } else {
+            console.log(performance);
             res.send(performance);
         }
     }).catch((err) => {
@@ -172,6 +176,17 @@ router.get("/:id", function (req, res, next) {
  */
 router.post("/", async function (req, res, next) {
 
+    // Format result with meeting date
+    if(req.body.result && isValidObjectId(req.body.race)) {
+
+        await Meeting.findOne({races: req.body.race}).then((meeting) => {
+            if (meeting) {
+                req.body.result = meeting.startDate + "T" + req.body.result + "Z";
+            }
+            
+        })
+    }
+
     // Auto-fill positions with athlete and race IDs
     if (!req.body.positions && isValidObjectId(req.body.athlete) && isValidObjectId(req.body.race)) {
         await Position.find({athlete: req.body.athlete, race: req.body.race}).then((positions) => {
@@ -191,7 +206,7 @@ router.post("/", async function (req, res, next) {
             
         })
     }
-    
+
     const newPerformance = new Performance(req.body);
 
     newPerformance.save().then(async (savedPerformance) => {
@@ -265,7 +280,17 @@ router.post("/", async function (req, res, next) {
  * @apiError Conflict           Data passed do not follow the model.
  * 
  */
-router.put("/:id", function (req, res, next) {
+router.put("/:id", async function (req, res, next) {
+    // Format result with meeting date
+    if(req.body.result) {
+        const performance = await Performance.findById(req.params.id);
+        await Meeting.findOne({races: performance.race}).then((meeting) => {
+            if (meeting) {
+                req.body.result = meeting.startDate + "T" + req.body.result + "Z";
+            }
+            
+        })
+    }
     Performance.findByIdAndUpdate(req.params.id, req.body, { returnOriginal: false, runValidators: true }).then(async (updatedPerformance) => {
 
         // Check if performance is a record, save it in that case
