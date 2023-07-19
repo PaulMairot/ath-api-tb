@@ -59,6 +59,7 @@ router.get("/", function (req, res, next) {
     let filters = Object.assign({}, req.query);
     delete filters.reactionTime;
     delete filters.result;
+    delete filters.limit;
 
     Performance.find({
         ...req.query.result ? { result: { $gte: new Date(req.query.result).toISOString() } } : {},
@@ -67,19 +68,20 @@ router.get("/", function (req, res, next) {
     })
     .populate([
         {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
-        {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}]},
-        {path: 'positions'},
+        {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}, {path : 'meeting'}]},
+        {path: 'positions', options: { sort: { time: 1 } }},
         {path: 'startingPressure'}
     ])
-        .sort({lane: 1}).then((performances) => {
-            if (performances.length === 0) {
-                res.status(404).send("No performance found.")
-            } else {
-                res.send(performances);
-            }
-        }).catch((err) => {
-            return next(err);
-        });
+    .limit(req.query.limit)
+    .sort({lane: 1}).then((performances) => {
+        if (performances.length === 0) {
+            res.status(404).send("No performance found.")
+        } else {
+            res.send(performances);
+        }
+    }).catch((err) => {
+        return next(err);
+    });
 });
 
 
@@ -120,15 +122,14 @@ router.get("/:id", function (req, res, next) {
     Performance.findById(req.params.id)
     .populate([
             {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
-            {path: 'race'},
-            {path: 'positions'},
+            {path: 'race',populate : [{path : 'athletes'}, {path : 'discipline'}, {path : 'meeting'}]},
+            {path: 'positions', options: { sort: { time: 1 } }},
             {path: 'startingPressure'}
     ]).then((performance) => {
         
         if (performance == null) {
             res.status(404).send("No performance found with ID :" + req.params.id + ".")
         } else {
-            console.log(performance);
             res.send(performance);
         }
     }).catch((err) => {

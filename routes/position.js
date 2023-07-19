@@ -49,7 +49,10 @@ router.get("/", function (req, res, next) {
         ...filters,
         ...req.query.speed ? { speed: { $gt: req.query.speed } } : {}
     })
-        .populate(['athlete', 'race'])
+    .populate([
+        {path: 'athlete',populate : [{path : 'nationality'}, {path : 'discipline'}]},
+        {path: 'race',populate : [{path : 'performances'}]},
+    ])
         .sort({time: 1}).then((positions) => {
             if (positions.length === 0) {
                 res.status(404).send("No position found.")
@@ -105,7 +108,7 @@ router.post("/", function (req, res, next) {
     newPosition.save().then(async (savedPosition) => {
         // Add performance to race performances array
         await Performance.findOneAndUpdate(
-            { race: req.body.race, athlete: req.body.athlete }, { $push: { postions: savedPerformance._id }}
+            { race: req.body.race, athlete: req.body.athlete }, { $push: { positions: savedPosition._id }}
         )
 
         res.status(201).send(savedPosition);
