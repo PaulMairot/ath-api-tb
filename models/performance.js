@@ -73,8 +73,7 @@ function formatResult(result) {
         }
 
         return format(time, formatTokens);
-    }
-    
+    } 
 }
 
 performanceSchema.set("toJSON", {

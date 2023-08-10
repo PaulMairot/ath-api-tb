@@ -130,8 +130,14 @@ router.get("/:id", function (req, res, next) {
         if (performance == null) {
             res.status(404).send("No performance found with ID :" + req.params.id + ".")
         } else {
+            broadcastData({ ressource: 'performance', 
+                        type: 'get', 
+                        data: performance
+                    });
             res.send(performance);
         }
+
+        
     }).catch((err) => {
         return next(err);
     });

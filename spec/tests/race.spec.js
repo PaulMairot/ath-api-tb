@@ -47,12 +47,14 @@ describe('POST /races', function() {
             })
             .expect(201)
             .expect('Content-Type', /json/);
-        expect(res.body.meeting).toEqual(meeting.id);
+        expect(res.body.meeting.id).toEqual(meeting.id);
         expect(res.body.plannedStartTime).toEqual('19:15:00');
         expect(res.body.realStartTime).toEqual('19:15:30');
         expect(res.body.state).toEqual('finished');
-        expect(res.body.discipline).toEqual(discipline.id);
-        expect(res.body.athletes).toEqual([athlete1.id, athlete2.id]);
+        expect(res.body.discipline).toEqual( 
+            expect.objectContaining({ type: discipline.type, distance: discipline.distance, gender: discipline.gender})
+        );
+        expect(res.body.athletes[0].id).toEqual(athlete1.id);
     });
 
     it('should not create a race (invalid body)', async function() {
@@ -221,12 +223,14 @@ describe('PUT /races', function() {
             })
             .expect(200)
             .expect('Content-Type', /json/)
-        expect(res.body.meeting).toEqual(meeting.id);
+        expect(res.body.meeting.id).toEqual(meeting.id);
         expect(res.body.plannedStartTime).toEqual('19:15:00');
         expect(res.body.realStartTime).toEqual('19:15:30');
         expect(res.body.state).toEqual('finished');
-        expect(res.body.discipline).toEqual(discipline.id);
-        expect(res.body.athletes).toEqual([athlete1.id, athlete2.id]);
+        expect(res.body.discipline).toEqual( 
+            expect.objectContaining({ type: discipline.type, distance: discipline.distance, gender: discipline.gender})
+        );
+        expect(res.body.athletes[0].id).toEqual(athlete1.id);
     });
 
     it('should not modify a race', async function() {

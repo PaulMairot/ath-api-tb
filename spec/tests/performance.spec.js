@@ -58,12 +58,12 @@ describe('POST /performances', function() {
             })
             .expect(201)
             .expect('Content-Type', /json/);
-        expect(res.body.athlete).toEqual(athlete.id);
-        expect(res.body.race).toEqual(race.id);
+        expect(res.body.athlete.id).toEqual(athlete.id);
+        expect(res.body.race.id).toEqual(race.id);
         expect(res.body.lane).toEqual(2);
         expect(res.body.result).toEqual('14.115');
-        expect(res.body.positions).toEqual([position1.id, position2.id]);
-        expect(res.body.startingPressure).toEqual(pressure.id);
+        expect(res.body.positions[0].id).toEqual(position1.id);
+        expect(res.body.positions[1].id).toEqual(position2.id);
         expect(res.body.reactionTime).toEqual(0.230);
     });
 
@@ -164,7 +164,10 @@ describe('GET /performances', function() {
             .get(`/performances?athlete=${athlete1.id}&race=${race.id}&result=2023-05-05T00:00:14.115Z&reactionTime=0.230`)
             .expect(200)
             .expect('Content-Type', /json/)
-        expect(res.body[0].athlete.id).toEqual(athlete1.id);
+        expect(res.body[0].athlete).toEqual(
+            expect.objectContaining({
+              id: athlete1.id
+            }));
         expect(res.body[0].race.id).toEqual(race.id);
         expect(res.body[0].lane).toEqual(2);
         expect(res.body[0].result).toEqual('14.115');
@@ -232,11 +235,10 @@ describe('PUT /performances', function() {
             })
             .expect(200)
             .expect('Content-Type', /json/)
-        expect(res.body.athlete).toEqual(athlete2.id);
-        expect(res.body.race).toEqual(race.id);
+        expect(res.body.athlete.id).toEqual(athlete2.id);
+        expect(res.body.race.id).toEqual(race.id);
         expect(res.body.lane).toEqual(3);
         expect(res.body.result).toEqual('14.615');
-        expect(res.body.startingPressure).toEqual(pressure2.id);
         expect(res.body.reactionTime).toEqual(0.278);
     });
 

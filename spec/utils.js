@@ -44,39 +44,42 @@ export function formatTimeRace(time) {
 export async function manageRecord(performance) {
   if (performance instanceof Performance) {
 
-    performance.mention.forEach(async mention => {
+    let race = await Race.findOne({id : performance.race});
+    if (race instanceof Race) {
       
-      let record = null;
+      performance.mention.forEach(async mention => {
+        
+        let record = null;
 
-      switch (mention) {
-        case "WR" :
-        case "OR" :
-        case "PR" :
-        case "CR" :
-        case "GR" :
-        case "MR" :
-        case "DLR": {
-          record = await Record.findOne({ mention: mention }).exec();
-          createUpdateRecord(record, performance, mention);
-          break;
+        switch (mention) {
+          case "WR" :
+          case "OR" :
+          case "PR" :
+          case "CR" :
+          case "GR" :
+          case "MR" :
+          case "DLR": {
+            record = await Record.findOne({ mention: mention, discipline: race.discipline }).exec();
+            createUpdateRecord(record, performance, mention);
+            break;
+          }
+          case "NR" : {
+            record = await Record.findOne({ mention: mention, country: performance.athlete.nationality, discipline: race.discipline}).exec();
+            createUpdateRecord(record, performance, mention)
+            break;
+          }
+          case "PB" : {
+            record = await Record.findOne({ mention: mention, athlete: performance.athlete, discipline: race.discipline}).exec();
+            createUpdateRecord(record, performance, mention)
+            break;
+          } 
+          default:
+            return;
         }
-        case "NR" : {
-          record = await Record.findOne({ mention: mention, country: performance.athlete.nationality}).exec();
-          createUpdateRecord(record, performance, mention)
-          break;
-        }
-        case "PB" : {
-          record = await Record.findOne({ mention: mention, athlete: performance.athlete}).exec();
-          createUpdateRecord(record, performance, mention)
-          break;
-        } 
-        default:
-          return;
-      }
-    });
+      });
+    }
   }
 }
-
 async function createUpdateRecord(record, performance, mention) {
   let result = new Date(await performance.get('result', null, { getters: false }));
   let race = await Race.findById(performance.race).populate('discipline');

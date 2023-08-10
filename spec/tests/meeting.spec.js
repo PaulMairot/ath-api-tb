@@ -35,7 +35,9 @@ describe('POST /meetings', function() {
         expect(res.body.endDate).toEqual('2023-05-05');
         expect(res.body.location).toEqual('Suhaim Bin Hamad Stadium');
         expect(res.body.city).toEqual('Doha');
-        expect(res.body.country).toEqual(country.id);
+        expect(res.body.country).toEqual( 
+            expect.objectContaining({ alpha2: country.alpha2, alpha3: country.alpha3, noc: country.noc, name: country.name})
+        );
     });
 
     it('should not create a meeting (invalid body)', async function() {
